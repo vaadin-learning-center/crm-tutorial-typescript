@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.vaadin.flow.server.connect.Endpoint;
+import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import com.vaadin.tutorial.crm.backend.entity.Contact.Status;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Endpoint
 @Service
+@AnonymousAllowed
 public class ServiceEndpoint {
 
   private final ContactService contactService;
