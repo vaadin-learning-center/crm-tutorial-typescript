@@ -1,15 +1,13 @@
-# Spring Boot and Vaadin tutorial application source code
+# Vaadin CRM in TypeScript
 
-This repository contains the source code for the [Java Web App development tutorial series](https://vaad.in/37pHRmY).
+Reference implementation of a Spring Boot + Vaadin web application.
+The UI is built with reactive components using TypeScript and LitElement.
+The backend is built with Java and Spring Boot.
+
+This is a TypeScript-based version of the [Vaadin CRM](https://github.com/vaadin-learning-center/crm-tutorial) application which is used as an example in the [Building Modern Web Apps with Spring Boot and Vaadin](https://vaad.in/37pHRmY) tutorial series. 
+
+See the [Vaadin FAQ](https://vaadin.com/faq) for more details on the difference between the Vaadin Java and TypeScript APIs.
 
 
-## Branch per chapter
-You can find the completed source for each chapter in separate branches. 
-The main branch will be updated to contain the finished, application once all chapters have been published. 
-
-
-## Text tutorial
-You can find a text version of the tutorial in the [Vaadin Learning Center](https://vaad.in/37pHRmY).
-
-## Video tutorial
-You can find a video version of the tutorial on [YouTube](https://www.youtube.com/playlist?list=PLcRrh9hGNallPtT2VbUAsrWqvkQ-XE22h)
+## Key differences from [Vaadin CRM](https://github.com/vaadin-learning-center/crm-tutorial)
+TBD
