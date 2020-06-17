@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/22416150/84907166-8bdb4f00-b0bb-11ea-8232-b7ebb836707d.png" width="196" alt="under construction">
+</p>
+
 # Vaadin CRM in TypeScript
 
 Reference implementation of a Spring Boot + Vaadin web application.
