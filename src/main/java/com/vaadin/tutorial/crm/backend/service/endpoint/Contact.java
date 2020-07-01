@@ -1,5 +1,7 @@
 package com.vaadin.tutorial.crm.backend.service.endpoint;
 
+import com.vaadin.tutorial.crm.backend.entity.Contact.Status;
+
 public class Contact {
 
   public Contact() {
@@ -10,7 +12,7 @@ public class Contact {
     firstName = dbContact.getFirstName();
     lastName = dbContact.getLastName();
     company = new Company(dbContact.getCompany());
-    status = dbContact.getStatus().toString();
+    status = dbContact.getStatus();
     email = dbContact.getEmail();
   }
 
@@ -22,7 +24,7 @@ public class Contact {
 
   private Company company;
 
-  private String status;
+  private Status status;
 
   private String email = "";
 
@@ -42,11 +44,11 @@ public class Contact {
     this.email = email;
   }
 
-  public String getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 

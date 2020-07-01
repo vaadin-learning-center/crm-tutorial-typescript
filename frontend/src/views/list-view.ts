@@ -15,6 +15,7 @@ import Contact from '../../generated/com/vaadin/tutorial/crm/backend/service/end
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Company';
 import './contact-form';
 import { ContactModel } from './contact-model';
+import Status from "../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status";
 
 @customElement('list-view')
 export class ListView extends LitElement {
@@ -28,7 +29,7 @@ export class ListView extends LitElement {
   private companies: Company[] = [];
 
   @property({ type: Array })
-  private statuses: string[] = [];
+  private statuses: Status[] = [];
 
   private filterText = '';
 

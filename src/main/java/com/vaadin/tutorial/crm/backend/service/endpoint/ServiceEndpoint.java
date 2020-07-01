@@ -30,8 +30,8 @@ public class ServiceEndpoint {
     return contactService.findAll(filter).stream().map(Contact::new).collect(Collectors.toList());
   }
 
-  public List<String> getContactStatuses() {
-    return Arrays.asList(Status.values()).stream().map(Status::toString).collect(Collectors.toList());
+  public Status[] getContactStatuses() {
+    return Status.values();
   }
 
   public void saveContact(Contact contact) {
@@ -41,7 +41,7 @@ public class ServiceEndpoint {
     dbContact.setFirstName(contact.getFirstName());
     dbContact.setLastName(contact.getLastName());
     dbContact.setEmail(contact.getEmail());
-    dbContact.setStatus(Status.valueOf(contact.getStatus()));
+    dbContact.setStatus(contact.getStatus());
 
     if (dbContact.getCompany() == null || !contact.getCompany().getId().equals(dbContact.getCompany().getId())) {
       companyService.findById(contact.getCompany().getId()).ifPresent(c -> {
