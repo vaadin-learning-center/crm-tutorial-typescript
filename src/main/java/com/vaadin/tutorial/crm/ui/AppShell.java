@@ -9,8 +9,7 @@ import com.vaadin.flow.server.PWA;
      offlineResources = {
         "./styles/offline.css",
         "./images/offline.png"
-     },
-     enableInstallPrompt = false
+     }
 )
 public class AppShell implements AppShellConfigurator {
 }
