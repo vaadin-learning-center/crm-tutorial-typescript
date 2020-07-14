@@ -1,4 +1,4 @@
-import { css, customElement, html, LitElement, property } from 'lit-element';
+import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-text-field/vaadin-email-field';
@@ -8,6 +8,7 @@ import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/end
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Contact';
 import { ContactModel } from './contact-model';
 import {Lumo} from "../../styles/lumo";
+import styles from "./contact-form.css";
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {
@@ -20,21 +21,7 @@ export class ContactForm extends LitElement {
   @property({ type: Object })
   contact: Contact = new ContactModel();
 
-  static styles = [
-    Lumo,
-    css`:host {
-      display: grid;
-      gap: var(--lumo-space-m);
-      grid-template-columns: 1fr;
-      grid-auto-rows: min-content;
-    }
-
-    .buttons {
-      display: grid;
-      gap: var(--lumo-space-m);
-      grid-template-columns: repeat(3, 1fr);
-    }`
-  ];
+  static styles = [ Lumo, styles ];
 
   render() {
     if (!this.contact) return html`No contact selected`;

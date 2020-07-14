@@ -3,11 +3,36 @@
  * This file can be used for manual configuration will not be modified if the flowDefaults constant exists.
  */
 const merge = require('webpack-merge');
+const path = require('path');
 const flowDefaults = require('./webpack.generated.js');
 
-module.exports = merge(flowDefaults, {
-
+// TODO: use `lit-html-loader` by default
+// replace the default `raw-loader` for .css files with the custom `lit-css-loader`
+flowDefaults.module.rules.filter(rule => rule.test.test('.css')).forEach(rule => {
+  rule.use = ['lit-css-loader'];
 });
+
+module.exports = merge(flowDefaults,
+  // Add a custom plugin
+  // {
+  //   plugins: [
+  //     // (install the plugin with `npm install --save-dev webpack-bundle-analyzer`)
+  //     new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
+  //       analyzerMode: 'static',
+  //       reportFilename: '/Users/viktor/IdeaProjects/crm-tutorial-typescript/target/webpack-bundle-size-report.html'
+  //     })
+  //   ]
+  // },
+
+  // register a custom local webpack loader
+  {
+    resolveLoader: {
+      alias: {
+        'lit-css-loader': path.join(__dirname, 'lit-css-loader'),
+      },
+    }
+  },
+);
 
 /**
  * This file can be used to configure the flow plugin defaults.
