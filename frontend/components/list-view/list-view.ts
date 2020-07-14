@@ -13,11 +13,11 @@ import '@vaadin/vaadin-button';
 
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Contact';
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Company';
-import './contact-form';
-import { ContactModel } from './contact-model';
+import '../contact-form/contact-form';
+import { ContactModel } from '../../utils/contact-model';
 import Status from "../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status";
-import {Lumo} from "../../styles/lumo";
-import styles from "./list-view.css";
+import {Lumo} from "../../utils/lumo";
+import styles from './list-view.css';
 
 @customElement('list-view')
 export class ListView extends LitElement {
@@ -35,7 +35,7 @@ export class ListView extends LitElement {
 
   private filterText = '';
 
-  static styles = [ Lumo, styles ];
+  static styles = [Lumo, styles];
 
   render() {
     return html`

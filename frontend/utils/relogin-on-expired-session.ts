@@ -1,6 +1,6 @@
 import {MiddlewareContext, MiddlewareNext} from '@vaadin/flow-frontend/Connect';
-import {LoginOverlay} from "./src/views/login-overlay";
-import "./src/views/login-overlay";
+import {LoginOverlay} from "../components/login-overlay/login-overlay";
+import "../components/login-overlay/login-overlay";
 
 // TODO: include this into `@vaadin/flow-frontend/Connect`
 export async function reloginOnExpiredSession(context: MiddlewareContext, next: MiddlewareNext): Promise<Response> {

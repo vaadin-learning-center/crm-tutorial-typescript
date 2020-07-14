@@ -1,16 +1,17 @@
 import { Router } from '@vaadin/router';
 
-import './styles/lumo';
-import './src/main-layout';
-import './src/views/list-view';
-import {isLoggedIn} from "./src/auth";
+import './components/main-layout/main-layout';
+import './components/list-view/list-view';
+
+import './utils/lumo';
+import {isLoggedIn} from "./utils/auth";
 
 const routes = [
   {
     path: '/login',
     component: 'login-view',
     action: async () => {
-      await import (/* webpackChunkName: "login" */ './src/views/login-view');
+      await import (/* webpackChunkName: "login" */ './components/login-view/login-view');
     },
   },
   // Logging out is handled by Spring Security: it handles HTTP GET requests to
@@ -48,7 +49,7 @@ const routes = [
         component: 'dashboard-view',
         action: () => {
           import(
-            /* webpackChunkName: "dashboard" */ './src/views/dashboard-view'
+            /* webpackChunkName: "dashboard" */ './components/dashboard-view/dashboard-view'
           );
         },
       },

@@ -1,13 +1,14 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import { customElement, html, LitElement, property } from 'lit-element';
 
-import '@vaadin/vaadin-login/vaadin-login-overlay';
+import '@vaadin/vaadin-login/vaadin-login-form';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
-import {login} from '../auth';
+import {Router} from "@vaadin/router";
+import { login } from '../../utils/auth';
+import {Lumo} from "../../utils/lumo";
+import styles from './login-view.css';
 
-// TODO: avoid code duplication between `login-view` and `login-overlay`
-// Ideally the app would use the same component for both purposes.
-@customElement('login-overlay')
-export class LoginOverlay extends LitElement {
+@customElement('login-view')
+export class LoginView extends LitElement {
 
   @property()
   private error = false;
@@ -18,23 +19,26 @@ export class LoginOverlay extends LitElement {
   @property()
   private errorMessage = '';
 
-  @property()
-  private open = true;
+  private returnUrl = '/';
+
+  static styles = [Lumo, styles];
 
   render() {
     return html`
-      <vaadin-login-overlay
-        ?opened="${this.open}"
+      <h1>Vaadin CRM</h1>
+      <vaadin-login-form
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    
-      </vaadin-login-overlay>
+      </vaadin-login-form>
+      <p>Log in with user: <b>user</b> and password: <b>password</b>.</p>
     `;
   }
 
-  // use light DOM
-  protected createRenderRoot(): Element | ShadowRoot {
-    return this;
+  // TODO: import the AfterEnterObserver interface from @vaadin/router
+  onAfterEnter(context: Router.Context) {
+    // TODO: add the `returnUrl` property to the `Router.Context` type
+    this.returnUrl = (context as any).redirectFrom || this.returnUrl;
   }
 
   async login(event: CustomEvent) {
@@ -44,12 +48,7 @@ export class LoginOverlay extends LitElement {
     this.errorMessage = result.errorMessage;
 
     if (!result.error) {
-      this.open = false;
-      this.dispatchEvent(new CustomEvent('login-success', {
-        bubbles: true,
-        cancelable: false,
-        detail: {...event.detail, token: result.token }
-      }));
+      Router.go(this.returnUrl);
     }
   }
 
@@ -69,7 +68,7 @@ export class LoginOverlay extends LitElement {
       errorMessage: {
         title: this.errorTitle,
         message: this.errorMessage
-      }
+      },
     };
   }
 }

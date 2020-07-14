@@ -6,9 +6,10 @@ import '@vaadin/vaadin-combo-box';
 import '@vaadin/vaadin-button';
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Contact';
-import { ContactModel } from './contact-model';
-import {Lumo} from "../../styles/lumo";
-import styles from "./contact-form.css";
+import { ContactModel } from '../../utils/contact-model';
+import { Lumo } from "../../utils/lumo";
+
+import styles from './contact-form.css';
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {

@@ -1,32 +1,12 @@
-import { css, customElement, html, LitElement } from 'lit-element';
+import { customElement, html, LitElement } from 'lit-element';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-app-layout';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-drawer-toggle';
-import {Lumo} from "../styles/lumo";
+import {Lumo} from "../../utils/lumo";
+import styles from './main-layout.css';
 
 @customElement('main-layout')
 export class MainLayout extends LitElement {
-  static styles = [
-    Lumo,
-    css`.header {
-      padding: 0 var(--lumo-space-m);
-      display: flex !important;
-      width: 100%;
-      align-items: center;
-    }
-
-    .header h1.logo {
-      font-size: 1em;
-      margin: var(--lumo-space-m);
-      flex: 1;
-    }
-
-    .drawer ul {
-      list-style-type: none;
-    }
-    .drawer ul li {
-      margin-bottom: var(--lumo-space-m);
-    }`
-  ];
+  static styles = [Lumo, styles];
 
   render() {
     return html`

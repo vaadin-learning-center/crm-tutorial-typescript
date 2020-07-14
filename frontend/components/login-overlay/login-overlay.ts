@@ -1,14 +1,13 @@
-import { customElement, html, LitElement, property } from 'lit-element';
+import {customElement, html, LitElement, property} from 'lit-element';
 
-import '@vaadin/vaadin-login/vaadin-login-form';
+import '@vaadin/vaadin-login/vaadin-login-overlay';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
-import {Router} from "@vaadin/router";
-import { login } from '../auth';
-import {Lumo} from "../../styles/lumo";
-import styles from "./login-view.css";
+import {login} from '../../utils/auth';
 
-@customElement('login-view')
-export class LoginView extends LitElement {
+// TODO: avoid code duplication between `login-view` and `login-overlay`
+// Ideally the app would use the same component for both purposes.
+@customElement('login-overlay')
+export class LoginOverlay extends LitElement {
 
   @property()
   private error = false;
@@ -19,26 +18,23 @@ export class LoginView extends LitElement {
   @property()
   private errorMessage = '';
 
-  private returnUrl = '/';
-
-  static styles = [ Lumo, styles ];
+  @property()
+  private open = true;
 
   render() {
     return html`
-      <h1>Vaadin CRM</h1>
-      <vaadin-login-form
+      <vaadin-login-overlay
+        ?opened="${this.open}"
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    
-      </vaadin-login-form>
-      <p>Log in with user: <b>user</b> and password: <b>password</b>.</p>
+      </vaadin-login-overlay>
     `;
   }
 
-  // TODO: import the AfterEnterObserver interface from @vaadin/router
-  onAfterEnter(context: Router.Context) {
-    // TODO: add the `returnUrl` property to the `Router.Context` type
-    this.returnUrl = (context as any).redirectFrom || this.returnUrl;
+  // use light DOM
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
   }
 
   async login(event: CustomEvent) {
@@ -48,7 +44,12 @@ export class LoginView extends LitElement {
     this.errorMessage = result.errorMessage;
 
     if (!result.error) {
-      Router.go(this.returnUrl);
+      this.open = false;
+      this.dispatchEvent(new CustomEvent('login-success', {
+        bubbles: true,
+        cancelable: false,
+        detail: {...event.detail, token: result.token }
+      }));
     }
   }
 
@@ -68,7 +69,7 @@ export class LoginView extends LitElement {
       errorMessage: {
         title: this.errorTitle,
         message: this.errorMessage
-      },
+      }
     };
   }
 }
