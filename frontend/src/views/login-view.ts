@@ -4,6 +4,7 @@ import '@vaadin/vaadin-login/vaadin-login-form';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
 import {Router} from "@vaadin/router";
 import { login } from '../auth';
+import {Lumo} from "../../styles/lumo";
 
 @customElement('login-view')
 export class LoginView extends LitElement {
@@ -19,16 +20,17 @@ export class LoginView extends LitElement {
 
   private returnUrl = '/';
 
-  static styles = css`
-    :host {
+  static styles = [
+    Lumo,
+    css`:host {
       display: flex;
       flex-direction: column;
       width: 100%;
       height: 100%;
       align-items: center;
       justify-content: center;
-    }
-  `;
+    }`
+  ];
 
   render() {
     return html`

@@ -1,12 +1,13 @@
 import { css, customElement, html, LitElement } from 'lit-element';
-import '@vaadin/vaadin-lumo-styles/all-imports';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-app-layout';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-drawer-toggle';
+import {Lumo} from "../styles/lumo";
 
 @customElement('main-layout')
 export class MainLayout extends LitElement {
-  static styles = css`
-    .header {
+  static styles = [
+    Lumo,
+    css`.header {
       padding: 0 var(--lumo-space-m);
       display: flex !important;
       width: 100%;
@@ -24,8 +25,8 @@ export class MainLayout extends LitElement {
     }
     .drawer ul li {
       margin-bottom: var(--lumo-space-m);
-    }
-  `;
+    }`
+  ];
 
   render() {
     return html`

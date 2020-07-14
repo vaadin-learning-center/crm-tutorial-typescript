@@ -16,6 +16,7 @@ import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/end
 import './contact-form';
 import { ContactModel } from './contact-model';
 import Status from "../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status";
+import {Lumo} from "../../styles/lumo";
 
 @customElement('list-view')
 export class ListView extends LitElement {
@@ -33,8 +34,9 @@ export class ListView extends LitElement {
 
   private filterText = '';
 
-  static styles = css`
-    :host {
+  static styles = [
+    Lumo,
+    css`:host {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -81,8 +83,8 @@ export class ListView extends LitElement {
       .editing .contacts-grid {
         display: none;
       }
-    }
-  `;
+    }`
+  ];
 
   render() {
     return html`

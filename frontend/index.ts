@@ -1,6 +1,6 @@
 import { Router } from '@vaadin/router';
 
-import '@vaadin/vaadin-lumo-styles/all-imports';
+import './styles/lumo';
 import './src/main-layout';
 import './src/views/list-view';
 import {isLoggedIn} from "./src/auth";
