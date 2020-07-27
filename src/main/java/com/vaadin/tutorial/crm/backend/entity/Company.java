@@ -2,6 +2,7 @@ package com.vaadin.tutorial.crm.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -13,7 +14,7 @@ public class Company extends AbstractEntity {
   private String name;
 
   @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
-  @JsonIgnoreProperties("company")
+  @Nullable
   private List<Contact> employees = new LinkedList<>();
 
   public Company() {
