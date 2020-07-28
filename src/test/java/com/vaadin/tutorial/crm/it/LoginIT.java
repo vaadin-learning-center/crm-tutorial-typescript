@@ -2,8 +2,10 @@ package com.vaadin.tutorial.crm.it;
 
 import com.vaadin.tutorial.crm.it.elements.login.LoginViewElement;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class LoginIT extends AbstractTest {
     public LoginIT() {
         super("");
