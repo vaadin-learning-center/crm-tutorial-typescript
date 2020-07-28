@@ -1,12 +1,13 @@
 package com.vaadin.tutorial.crm.backend.service.endpoint;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
+import com.vaadin.tutorial.crm.backend.entity.Company;
+import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.entity.Contact.Status;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
@@ -27,7 +28,7 @@ public class ServiceEndpoint {
   }
 
   public List<Contact> find(String filter) {
-    return contactService.findAll(filter).stream().map(Contact::new).collect(Collectors.toList());
+    return contactService.findAll(filter);
   }
 
   public Status[] getContactStatuses() {
@@ -44,25 +45,23 @@ public class ServiceEndpoint {
     dbContact.setStatus(contact.getStatus());
 
     if (dbContact.getCompany() == null || !contact.getCompany().getId().equals(dbContact.getCompany().getId())) {
-      companyService.findById(contact.getCompany().getId()).ifPresent(c -> {
-        dbContact.setCompany(c);
-      });
+      companyService.findById(contact.getCompany().getId()).ifPresent(dbContact::setCompany);
     }
 
     contactService.save(dbContact);
   }
 
   public void deleteContact(Contact contact) {
-    contactService.find(contact.getId()).ifPresent(dbContact -> contactService.delete(dbContact));
+    contactService.find(contact.getId()).ifPresent(contactService::delete);
 
   }
 
   public List<Company> findAllCompanies() {
-    return companyService.findAll().stream().map(Company::new).collect(Collectors.toList());
+    return companyService.findAll();
   }
 
-  public HashMap<String, Object> getStats() {
-    HashMap<String, Object> stats = new HashMap<String, Object>();
+  public Map<String, Object> getStats() {
+    Map<String, Object> stats = new HashMap<>();
     stats.put("contacts", contactService.count());
     stats.put("companyStats", companyService.getStats());
 
