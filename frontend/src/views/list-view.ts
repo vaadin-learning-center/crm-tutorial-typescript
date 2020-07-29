@@ -11,11 +11,11 @@ import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 
-import Contact from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Contact';
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Company';
+import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import './contact-form';
-import { ContactModel } from './contact-model';
 import Status from "../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status";
+import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 
 @customElement('list-view')
 export class ListView extends LitElement {
@@ -99,7 +99,7 @@ export class ListView extends LitElement {
             @input=${(e: any) => this.filter(e.target.value)}
           ></vaadin-text-field>
           <vaadin-button
-            @click=${() => (this.currentContact = new ContactModel())}
+            @click=${() => (this.currentContact = ContactModel.createEmptyValue())}
             >Add contact</vaadin-button
           >
         </div>
