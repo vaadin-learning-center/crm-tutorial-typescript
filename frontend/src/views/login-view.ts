@@ -32,12 +32,12 @@ export class LoginView extends LitElement{
     }
   `;
 
-  constructor(onSucess?:(result:LoginResult)=>void){
+  constructor(onSuccess?:(result:LoginResult)=>void){
     super();
-    const defaultOnSucess = () => {
+    const defaultonSuccess = () => {
       Router.go(this.returnUrl);
     };
-    this.onSuccess = onSucess || defaultOnSucess;
+    this.onSuccess = onSuccess || defaultonSuccess;
   }
   render() {
     return html`
