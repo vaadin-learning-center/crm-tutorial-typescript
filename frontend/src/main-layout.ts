@@ -34,7 +34,7 @@ export class MainLayout extends LitElement {
         <div slot="navbar" class="header">
           <h1 class="logo">Vaadin CRM</h1>
           <vaadin-button @click="${this.discardCurrentSession}">Discard current session</vaadin-button>
-          <a href="/logout">Log out</a>
+          <a href="/logout" router-ignore>Log out</a>
         </div>
         <div slot="drawer" class="drawer">
           <ul>

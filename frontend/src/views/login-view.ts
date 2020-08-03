@@ -3,7 +3,8 @@ import { css, customElement, html, LitElement, property } from 'lit-element';
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
 import {Router} from "@vaadin/router";
-import { login, LoginResult } from '../auth';
+import {LoginResult, login} from "@vaadin/flow-frontend/Connect"
+
 
 @customElement('login-view')
 export class LoginView extends LitElement{

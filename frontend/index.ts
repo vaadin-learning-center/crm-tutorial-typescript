@@ -3,7 +3,8 @@ import { Router } from '@vaadin/router';
 import '@vaadin/vaadin-lumo-styles/all-imports';
 import './src/main-layout';
 import './src/views/list-view';
-import {isLoggedIn, logout} from "./src/auth";
+import {isUserLoggedIn} from "./generated/SecurityEndpoint";
+import {logout} from "@vaadin/flow-frontend/Connect"
 
 const routes = [
   {
@@ -32,7 +33,7 @@ const routes = [
   {
     path: '/',
     action: (_: Router.Context, commands: Router.Commands) => {
-      if (!isLoggedIn()) {
+      if (!isUserLoggedIn()) {
         return commands.redirect('/login');
       }
       return undefined;
