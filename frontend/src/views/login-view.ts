@@ -1,15 +1,18 @@
 import { css, customElement, html, LitElement, property } from 'lit-element';
 
-import '@vaadin/vaadin-login/vaadin-login-form';
+import '@vaadin/vaadin-login/vaadin-login-overlay';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
 import {Router} from "@vaadin/router";
-import { login } from '../auth';
+import { login, LoginResult } from '../auth';
 
 @customElement('login-view')
-export class LoginView extends LitElement {
+export class LoginView extends LitElement{
 
   @property()
   private error = false;
+
+  @property()
+  private open = true;
 
   @property()
   private errorTitle = '';
@@ -19,25 +22,31 @@ export class LoginView extends LitElement {
 
   private returnUrl = '/';
 
+  private onSuccess: (result:LoginResult) => void;
+
   static styles = css`
     :host {
       display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
+      
     }
   `;
 
+  constructor(onSucess?:(result:LoginResult)=>void){
+    super();
+    const defaultOnSucess = () => {
+      Router.go(this.returnUrl);
+    };
+    this.onSuccess = onSucess || defaultOnSucess;
+  }
   render() {
     return html`
       <h1>Vaadin CRM</h1>
-      <vaadin-login-form
+      <vaadin-login-overlay
+        ?opened="${this.open}" 
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    
-      </vaadin-login-form>
+      </vaadin-login-overlay>
       <p>Log in with user: <b>user</b> and password: <b>password</b>.</p>
     `;
   }
@@ -55,7 +64,7 @@ export class LoginView extends LitElement {
     this.errorMessage = result.errorMessage;
 
     if (!result.error) {
-      Router.go(this.returnUrl);
+      this.onSuccess(result);
     }
   }
 

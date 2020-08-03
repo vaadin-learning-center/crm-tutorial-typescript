@@ -3,7 +3,7 @@ import { Router } from '@vaadin/router';
 import '@vaadin/vaadin-lumo-styles/all-imports';
 import './src/main-layout';
 import './src/views/list-view';
-import {isLoggedIn} from "./src/auth";
+import {isLoggedIn, logout} from "./src/auth";
 
 const routes = [
   {
@@ -22,13 +22,13 @@ const routes = [
   // a full page reload), it would require a `/logout` route like the one below.
   // In that case a "Logout" button should an in-app link like
   //    `<a href="/logout">Log out</a>`
-  // {
-  //   path: '/logout',
-  //   action: async (_: Router.Context, commands: Router.Commands) => {
-  //     await logout();
-  //     return commands.redirect('/');
-  //   }
-  // },
+   {
+     path: '/logout',
+     action: async (_: Router.Context, commands: Router.Commands) => {
+       await logout();
+       return commands.redirect('/');
+     }
+   },
   {
     path: '/',
     action: (_: Router.Context, commands: Router.Commands) => {
