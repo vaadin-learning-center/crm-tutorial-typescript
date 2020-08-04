@@ -9,10 +9,10 @@ import {LoginResult, login} from "@vaadin/flow-frontend/Connect"
 @customElement('login-view')
 export class LoginView extends LitElement{
 
-  @property()
+  @property({type: Boolean})
   private error = false;
 
-  @property()
+  @property({type: Boolean})
   private open = true;
 
   @property()
@@ -41,14 +41,12 @@ export class LoginView extends LitElement{
   }
   render() {
     return html`
-      <h1>Vaadin CRM</h1>
       <vaadin-login-overlay
         ?opened="${this.open}" 
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    
       </vaadin-login-overlay>
-      <p>Log in with user: <b>user</b> and password: <b>password</b>.</p>
     `;
   }
 
@@ -73,7 +71,7 @@ export class LoginView extends LitElement{
     return {
       header: {
         title: 'Vaadin CRM',
-        description: 'Demo app for the Java Web App tutorial series'
+        description: 'Demo app for the Java Web App tutorial series. Log in with user: user and password: password.'
       },
       form: {
         title: 'Log in',

@@ -33,7 +33,6 @@ export class MainLayout extends LitElement {
         <vaadin-drawer-toggle slot="navbar"></vaadin-drawer-toggle>
         <div slot="navbar" class="header">
           <h1 class="logo">Vaadin CRM</h1>
-          <vaadin-button @click="${this.discardCurrentSession}">Discard current session</vaadin-button>
           <a href="/logout" router-ignore>Log out</a>
         </div>
         <div slot="drawer" class="drawer">
@@ -45,9 +44,5 @@ export class MainLayout extends LitElement {
         <slot></slot>
       </vaadin-app-layout>
     `;
-  }
-
-  private discardCurrentSession() {
-    fetch('/logout', {method: 'POST'});
   }
 }
