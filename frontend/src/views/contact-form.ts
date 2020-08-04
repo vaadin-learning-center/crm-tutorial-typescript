@@ -7,6 +7,7 @@ import '@vaadin/vaadin-button';
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import { Binder, field } from '@vaadin/form';
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {
@@ -17,7 +18,9 @@ export class ContactForm extends LitElement {
   statuses: string[] = [];
 
   @property({ type: Object })
-  contact: Contact = ContactModel.createEmptyValue();
+  set contact(value: Contact){
+    this.binder.read(value);
+  }
 
   static styles = css`
     :host {
@@ -34,44 +37,35 @@ export class ContactForm extends LitElement {
     }
   `;
 
+  private binder = new Binder(this, ContactModel);
+
   render() {
-    if (!this.contact) return html`No contact selected`;
+    if (!this.binder.value) return html`No contact selected`;
 
     return html`
       <vaadin-text-field
         label="First name"
-        .value=${this.contact.firstName}
-        @change=${(e: { target: { value: string } }) =>
-          this.updateModel('firstName', e.target.value)}
+        ...="${field(this.binder.model.firstName)}"
       ></vaadin-text-field>
       <vaadin-text-field
         label="Last name"
-        .value=${this.contact.lastName}
-        @change=${(e: { target: { value: string } }) =>
-          this.updateModel('lastName', e.target.value)}
+        ...="${field(this.binder.model.lastName)}"
       ></vaadin-text-field>
       <vaadin-email-field
         label="Email"
-        name="email"
-        .value=${this.contact.email}
-        @change=${(e: { target: { value: string } }) =>
-          this.updateModel('email', e.target.value)}
+        ...="${field(this.binder.model.email)}"
       ></vaadin-email-field>
       <vaadin-combo-box
         label="Company"
         item-label-path="name"
-        item-id-path="id"
+        item-value-path="id"
         .items=${this.companies}
-        .selectedItem=${this.contact.company}
-        @selected-item-changed=${(e: { target: { selectedItem: Company } }) =>
-          this.updateModel('company', e.target.selectedItem)}
+        ...="${field(this.binder.model.company.id)}"
       ></vaadin-combo-box>
       <vaadin-combo-box
         label="Status"
         .items=${this.statuses}
-        .value=${this.contact.status}
-        @change=${(e: { target: { value: string } }) =>
-          this.updateModel('status', e.target.value)}
+        ...="${field(this.binder.model.status)}"
       ></vaadin-combo-box>
 
       <div class="buttons">
@@ -86,16 +80,12 @@ export class ContactForm extends LitElement {
     `;
   }
 
-  updateModel(property: string, value: any) {
-    this.contact = Object.assign({}, this.contact, { [property]: value });
-  }
-
   save() {
     this.dispatchEvent(
       new CustomEvent('contact-saved', {
         bubbles: true,
         composed: true,
-        detail: { contact: this.contact },
+        detail: { contact: this.binder.value },
       })
     );
   }
@@ -105,7 +95,7 @@ export class ContactForm extends LitElement {
       new CustomEvent('contact-deleted', {
         bubbles: true,
         composed: true,
-        detail: { contact: this.contact },
+        detail: { contact: this.binder.value },
       })
     );
   }
