@@ -71,7 +71,7 @@ export class ContactForm extends LitElement {
 
       <div class="buttons">
         <vaadin-button @click=${this.save} theme="primary" ?disabled="${this.binder.invalid || this.binder.submitting}">Save</vaadin-button>
-        <vaadin-button @click=${this.delete} theme="error" ?disabled="${!this.binder.value && this.binder.value}"
+        <vaadin-button @click=${this.delete} theme="error" ?disabled="${!this.binder.value}"
           >Delete</vaadin-button
         >
         <vaadin-button @click=${this.cancel} theme="tertiary" 

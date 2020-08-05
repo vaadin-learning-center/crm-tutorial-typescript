@@ -146,8 +146,8 @@ export class ListView extends LitElement {
             .contact=${this.currentContact}
             .companies=${this.companies}
             .statuses=${this.statuses}
-            @contact-saved=${this.save}
-            @contact-deleted=${this.delete}
+            @contact-saved=${this.refreshContacts}
+            @contact-deleted=${this.refreshContacts}
             @cancel-editing=${this.clear}
           ></contact-form>
         </div>
@@ -155,14 +155,9 @@ export class ListView extends LitElement {
     `;
   }
 
-  async save() {
+  async refreshContacts() {
     this.clear();
-    this.updateContacts();
-  }
-
-  async delete() {
-    this.clear();
-    this.updateContacts();
+    await this.updateContacts();
   }
 
   clear() {
