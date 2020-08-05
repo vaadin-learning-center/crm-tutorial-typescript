@@ -2,8 +2,6 @@ import { css, customElement, html, LitElement, property } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import {
   find,
-  saveContact,
-  deleteContact,
   getContactStatuses,
   findAllCompanies,
 } from '../../generated/ServiceEndpoint';
@@ -157,14 +155,12 @@ export class ListView extends LitElement {
     `;
   }
 
-  async save(e: { detail: { contact: Contact } }) {
-    await saveContact(e.detail.contact);
+  async save() {
     this.clear();
     this.updateContacts();
   }
 
-  async delete(e: { detail: { contact: Contact } }) {
-    await deleteContact(e.detail.contact);
+  async delete() {
     this.clear();
     this.updateContacts();
   }

@@ -14,17 +14,16 @@ public class Contact extends AbstractEntity implements Cloneable {
         ImportedLead, NotContacted, Contacted, Customer, ClosedLost
     }
 
-    @NotNull
     @NotEmpty
     private String firstName = "";
 
-    @NotNull
     @NotEmpty
     private String lastName = "";
 
     @ManyToOne
     @JoinColumn(name = "company_id")
     @JsonIgnoreProperties("employees")
+    @NotNull
     private Company company;
 
     @Enumerated(EnumType.STRING)
@@ -32,7 +31,6 @@ public class Contact extends AbstractEntity implements Cloneable {
     private Contact.Status status;
 
     @Email
-    @NotNull
     @NotEmpty
     private String email = "";
 

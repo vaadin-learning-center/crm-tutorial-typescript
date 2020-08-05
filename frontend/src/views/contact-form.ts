@@ -8,6 +8,7 @@ import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Comp
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import { Binder, field } from '@vaadin/form';
+import { saveContact, deleteContact } from '../../generated/ServiceEndpoint';
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {
@@ -69,33 +70,32 @@ export class ContactForm extends LitElement {
       ></vaadin-combo-box>
 
       <div class="buttons">
-        <vaadin-button @click=${this.save} theme="primary">Save</vaadin-button>
-        <vaadin-button @click=${this.delete} theme="error"
+        <vaadin-button @click=${this.save} theme="primary" ?disabled="${this.binder.invalid || this.binder.submitting}">Save</vaadin-button>
+        <vaadin-button @click=${this.delete} theme="error" ?disabled="${!this.binder.value && this.binder.value}"
           >Delete</vaadin-button
         >
-        <vaadin-button @click=${this.cancel} theme="tertiary"
-          >Cancel</vaadin-button
-        >
+        <vaadin-button @click=${this.cancel} theme="tertiary" 
+        >Cancel</vaadin-button>
       </div>
     `;
   }
 
-  save() {
-    this.dispatchEvent(
-      new CustomEvent('contact-saved', {
-        bubbles: true,
-        composed: true,
-        detail: { contact: this.binder.value },
-      })
-    );
+  async save() {
+      await this.binder.submitTo(saveContact);
+      this.dispatchEvent(
+        new CustomEvent('contact-saved', {
+          bubbles: true,
+          composed: true
+        })
+      );
   }
 
-  delete() {
+  async delete() {
+    await deleteContact(this.binder.value);
     this.dispatchEvent(
       new CustomEvent('contact-deleted', {
         bubbles: true,
-        composed: true,
-        detail: { contact: this.binder.value },
+        composed: true
       })
     );
   }
