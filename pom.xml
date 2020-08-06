@@ -11,8 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>17.0.0.alpha5</vaadin.version>
-        <flow.version>3.2-SNAPSHOT</flow.version>
+        <vaadin.version>17.0.0.alpha6</vaadin.version>
+        <flow.version>4.0-SNAPSHOT</flow.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
@@ -119,18 +119,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-        </dependency>
-
-        <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-test</artifactId>
-          <scope>test</scope>
-          <exclusions>
-            <exclusion>
-              <groupId>org.junit.vintage</groupId>
-              <artifactId>junit-vintage-engine</artifactId>
-            </exclusion>
-          </exclusions>
         </dependency>
 
         <dependency>

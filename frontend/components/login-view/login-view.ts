@@ -1,17 +1,20 @@
 import { customElement, html, LitElement, property } from 'lit-element';
 
-import '@vaadin/vaadin-login/vaadin-login-form';
+import '@vaadin/vaadin-login/vaadin-login-overlay';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
 import {Router} from "@vaadin/router";
-import { login } from '../../utils/auth';
+import {LoginResult, login} from "@vaadin/flow-frontend/Connect"
 import {Lumo} from "../../utils/lumo";
 import styles from './login-view.css';
 
 @customElement('login-view')
-export class LoginView extends LitElement {
+export class LoginView extends LitElement{
 
-  @property()
+  @property({type: Boolean})
   private error = false;
+
+  @property({type: Boolean})
+  private open = true;
 
   @property()
   private errorTitle = '';
@@ -21,17 +24,25 @@ export class LoginView extends LitElement {
 
   private returnUrl = '/';
 
+  private onSuccess: (result:LoginResult) => void;
+
   static styles = [Lumo, styles];
 
+  constructor(onSuccess?:(result:LoginResult)=>void){
+    super();
+    const defaultonSuccess = () => {
+      Router.go(this.returnUrl);
+    };
+    this.onSuccess = onSuccess || defaultonSuccess;
+  }
   render() {
     return html`
-      <h1>Vaadin CRM</h1>
-      <vaadin-login-form
+      <vaadin-login-overlay
+        ?opened="${this.open}" 
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    
-      </vaadin-login-form>
-      <p>Log in with user: <b>user</b> and password: <b>password</b>.</p>
+      </vaadin-login-overlay>
     `;
   }
 
@@ -48,7 +59,7 @@ export class LoginView extends LitElement {
     this.errorMessage = result.errorMessage;
 
     if (!result.error) {
-      Router.go(this.returnUrl);
+      this.onSuccess(result);
     }
   }
 
@@ -56,7 +67,7 @@ export class LoginView extends LitElement {
     return {
       header: {
         title: 'Vaadin CRM',
-        description: 'Demo app for the Java Web App tutorial series'
+        description: 'Demo app for the Java Web App tutorial series. Log in with user: user and password: password.'
       },
       form: {
         title: 'Log in',

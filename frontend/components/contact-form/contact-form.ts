@@ -4,9 +4,9 @@ import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-text-field/vaadin-email-field';
 import '@vaadin/vaadin-combo-box';
 import '@vaadin/vaadin-button';
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Company';
-import Contact from '../../generated/com/vaadin/tutorial/crm/backend/service/endpoint/Contact';
-import { ContactModel } from '../../utils/contact-model';
+import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
+import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import { Lumo } from "../../utils/lumo";
 
 import styles from './contact-form.css';
@@ -20,7 +20,7 @@ export class ContactForm extends LitElement {
   statuses: string[] = [];
 
   @property({ type: Object })
-  contact: Contact = new ContactModel();
+  contact: Contact = ContactModel.createEmptyValue();
 
   static styles = [ Lumo, styles ];
 
