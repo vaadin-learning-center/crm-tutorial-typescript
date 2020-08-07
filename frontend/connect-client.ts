@@ -1,7 +1,7 @@
-import {ConnectClient, InvalidSessionMiddleWare, EndpointCallContinue} from '@vaadin/flow-frontend/Connect';
+import {ConnectClient, InvalidSessionMiddleware} from '@vaadin/flow-frontend/Connect';
 import { LoginView } from './components/login-view/login-view';
-const client = new ConnectClient({prefix: 'connect', middlewares: [InvalidSessionMiddleWare.create(
-    async (continueFunc: EndpointCallContinue)=>{
+const client = new ConnectClient({prefix: 'connect', middlewares: [new InvalidSessionMiddleware(
+    async (continueFunc) => {
         await import ('./components/login-view/login-view');
         const loginOverlay = new LoginView((result)=>{
             const token = result.token;

@@ -2,8 +2,6 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import {
   find,
-  saveContact,
-  deleteContact,
   getContactStatuses,
   findAllCompanies,
 } from '../../generated/ServiceEndpoint';
@@ -101,8 +99,8 @@ export class ListView extends LitElement {
             .contact=${this.currentContact}
             .companies=${this.companies}
             .statuses=${this.statuses}
-            @contact-saved=${this.save}
-            @contact-deleted=${this.delete}
+            @contact-saved=${this.refreshContacts}
+            @contact-deleted=${this.refreshContacts}
             @cancel-editing=${this.clear}
           ></contact-form>
         </div>
@@ -110,16 +108,9 @@ export class ListView extends LitElement {
     `;
   }
 
-  async save(e: { detail: { contact: Contact } }) {
-    await saveContact(e.detail.contact);
+  async refreshContacts() {
     this.clear();
-    this.updateContacts();
-  }
-
-  async delete(e: { detail: { contact: Contact } }) {
-    await deleteContact(e.detail.contact);
-    this.clear();
-    this.updateContacts();
+    await this.updateContacts();
   }
 
   clear() {
