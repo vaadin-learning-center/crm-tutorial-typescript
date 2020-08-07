@@ -1,6 +1,6 @@
-import {ConnectClient, InvalidSessionMiddleWare} from '@vaadin/flow-frontend/Connect';
+import {ConnectClient, InvalidSessionMiddleware, MiddlewareContext, MiddlewareNext} from '@vaadin/flow-frontend/Connect';
 import { LoginView } from './src/views/login-view';
-const client = new ConnectClient({prefix: 'connect', middlewares: [new InvalidSessionMiddleWare(
+const myMiddleWareWithClass = new InvalidSessionMiddleware(
     async (continueFunc) => {
         await import ('./src/views/login-view');
         const loginOverlay = new LoginView((result)=>{
@@ -12,5 +12,12 @@ const client = new ConnectClient({prefix: 'connect', middlewares: [new InvalidSe
         });
         document.body.append(loginOverlay);
     }
-)]});
+);
+
+const myMiddleWareWithNativeFunction = (context: MiddlewareContext, next: MiddlewareNext)=>{
+    Function
+    return next(context);
+};
+
+const client = new ConnectClient({prefix: 'connect', middlewares: [myMiddleWareWithClass, myMiddleWareWithNativeFunction]});
 export default client;
