@@ -1,7 +1,5 @@
 package com.vaadin.tutorial.crm.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

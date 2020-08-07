@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 @Endpoint
 @Service
-@AnonymousAllowed
 public class ServiceEndpoint {
 
   private final ContactService contactService;
