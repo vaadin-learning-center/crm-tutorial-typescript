@@ -2,13 +2,13 @@ import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import {LoginI18n} from "@vaadin/vaadin-login/@types/interfaces";
-import {Router} from "@vaadin/router";
+import {Router, AfterEnterObserver, RouterLocation} from "@vaadin/router";
 import {LoginResult, login} from "@vaadin/flow-frontend/Connect"
 import {Lumo} from "../../utils/lumo";
 import styles from './login-view.css';
 
 @customElement('login-view')
-export class LoginView extends LitElement{
+export class LoginView extends LitElement implements AfterEnterObserver {
 
   @property({type: Boolean})
   private error = false;
@@ -46,10 +46,9 @@ export class LoginView extends LitElement{
     `;
   }
 
-  // TODO: import the AfterEnterObserver interface from @vaadin/router
-  onAfterEnter(context: Router.Context) {
+  onAfterEnter(location: RouterLocation) {
     // TODO: add the `returnUrl` property to the `Router.Context` type
-    this.returnUrl = (context as any).redirectFrom || this.returnUrl;
+    this.returnUrl = location.redirectFrom || this.returnUrl;
   }
 
   async login(event: CustomEvent) {
