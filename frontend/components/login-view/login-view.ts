@@ -47,7 +47,6 @@ export class LoginView extends LitElement implements AfterEnterObserver {
   }
 
   onAfterEnter(location: RouterLocation) {
-    // TODO: add the `returnUrl` property to the `Router.Context` type
     this.returnUrl = location.redirectFrom || this.returnUrl;
   }
 
