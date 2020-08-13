@@ -1,4 +1,4 @@
-import { css, customElement, html, LitElement, property } from 'lit-element';
+import { customElement, html, LitElement, property } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import {
   find,
@@ -11,9 +11,11 @@ import '@vaadin/vaadin-button';
 
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
-import './contact-form';
-import Status from "../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status";
+import '../contact-form/contact-form';
+import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import { Lumo } from '../../utils/lumo';
+import styles from './list-view.css';
 
 @customElement('list-view')
 export class ListView extends LitElement {
@@ -31,56 +33,7 @@ export class ListView extends LitElement {
 
   private filterText = '';
 
-  static styles = css`
-    :host {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      padding: var(--lumo-space-m);
-    }
-
-    .wrapper {
-      height: 100%;
-    }
-
-    .toolbar > * {
-      margin-right: var(--lumo-space-m);
-    }
-
-    .toolbar {
-      margin-bottom: var(--lumo-space-m);
-    }
-
-    .content {
-      flex: 1;
-      display: flex;
-      height: 100%;
-    }
-
-    .contacts-grid {
-      height: 100%;
-      flex: 2;
-    }
-
-    .contact-form {
-      flex: 2;
-      min-width: 300px;
-      margin-left: var(--lumo-space-m);
-      display: none;
-    }
-
-    .editing .contact-form {
-      display: grid;
-    }
-
-    @media (max-width: 1100px) {
-      .editing .toolbar,
-      .editing .contacts-grid {
-        display: none;
-      }
-    }
-  `;
+  static styles = [Lumo, styles];
 
   render() {
     return html`

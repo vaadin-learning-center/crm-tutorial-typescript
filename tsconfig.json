@@ -8,7 +8,7 @@
     "sourceMap": true,
     "inlineSources": true,
     "module": "esNext",
-    "target": "es2019",
+    "target": "es2017",
     "moduleResolution": "node",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
@@ -19,6 +19,10 @@
     "noUnusedParameters": true,
     "experimentalDecorators": true
   },
-  "include": ["frontend/**/*.ts", "frontend/index.js"],
+  "include": [
+    "frontend/**/*.ts",
+    "frontend/index.js",
+    "types.d.ts"
+  ],
   "exclude": []
 }

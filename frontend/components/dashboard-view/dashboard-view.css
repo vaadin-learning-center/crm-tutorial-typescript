@@ -1,0 +1,11 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact-stats {
+  font-size: 4em;
+  margin: 1em 0;
+}

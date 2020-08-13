@@ -1,7 +1,9 @@
-import { css, customElement, html, LitElement, property } from 'lit-element';
+import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-charts';
 import { getStats } from '../../generated/ServiceEndpoint';
+import { Lumo } from '../../utils/lumo';
+import styles from './dashboard-view.css';
 
 @customElement('dashboard-view')
 export class DashboardView extends LitElement {
@@ -11,19 +13,7 @@ export class DashboardView extends LitElement {
   @property()
   private chartValues: any = [];
 
-  static styles = css`
-    :host {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .contact-stats {
-      font-size: 4em;
-      margin: 1em 0;
-    }
-  `;
+  static styles = [Lumo, styles];
 
   render() {
     return html`

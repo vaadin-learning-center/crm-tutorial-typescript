@@ -1,4 +1,4 @@
-import { css, customElement, html, LitElement, property } from 'lit-element';
+import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-text-field/vaadin-email-field';
@@ -9,6 +9,9 @@ import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Cont
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import { Binder, field } from '@vaadin/form';
 import { saveContact, deleteContact } from '../../generated/ServiceEndpoint';
+import { Lumo } from '../../utils/lumo';
+
+import styles from './contact-form.css';
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {
@@ -23,20 +26,7 @@ export class ContactForm extends LitElement {
     this.binder.read(value);
   }
 
-  static styles = css`
-    :host {
-      display: grid;
-      gap: var(--lumo-space-m);
-      grid-template-columns: 1fr;
-      grid-auto-rows: min-content;
-    }
-
-    .buttons {
-      display: grid;
-      gap: var(--lumo-space-m);
-      grid-template-columns: repeat(3, 1fr);
-    }
-  `;
+  static styles = [ Lumo, styles ];
 
   private binder = new Binder(this, ContactModel);
 
