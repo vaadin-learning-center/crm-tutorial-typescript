@@ -49,9 +49,8 @@ export class ContactForm extends LitElement {
       <vaadin-combo-box
         label="Company"
         item-label-path="name"
-        item-value-path="id"
         .items=${this.companies}
-        ...="${field(this.binder.model.company.id)}"
+        ...="${field(this.binder.model.company)}"
       ></vaadin-combo-box>
       <vaadin-combo-box
         label="Status"
