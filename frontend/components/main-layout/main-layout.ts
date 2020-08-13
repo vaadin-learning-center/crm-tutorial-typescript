@@ -1,7 +1,7 @@
 import { customElement, html, LitElement } from 'lit-element';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-app-layout';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-drawer-toggle';
-import {Lumo} from "../../utils/lumo";
+import { Lumo } from '../../utils/lumo';
 import styles from './main-layout.css';
 
 @customElement('main-layout')

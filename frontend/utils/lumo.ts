@@ -5,21 +5,17 @@
    1. [in index.ts] import for side effects to apply the Lumo theme to the <html> element
       This applies the Lumo theme to the light DOM of the app globally.
 
-      import './styles/lumo';
+      import './utils/lumo';
 
    2. [in my-view.ts] import the `Lumo` css literal to use the Lumo theme inside LitElement-based custom elements
       This applies the Lumo theme to the shadow DOM of a custom element.
 
-      import {Lumo} from '../styles/lumo';
+      import { Lumo } from '../../utils/lumo';
+      import styles from './my-view.css';
 
       @customElement('my-view')
       export class MyView extends LitElement {
-        static styles = [
-          Lumo,
-          css`
-            view styles
-          `
-        ];
+        static styles = [Lumo, styles];
         ...
       }
 

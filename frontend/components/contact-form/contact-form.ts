@@ -9,7 +9,7 @@ import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Cont
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import { Binder, field } from '@vaadin/form';
 import { saveContact, deleteContact } from '../../generated/ServiceEndpoint';
-import { Lumo } from "../../utils/lumo";
+import { Lumo } from '../../utils/lumo';
 
 import styles from './contact-form.css';
 

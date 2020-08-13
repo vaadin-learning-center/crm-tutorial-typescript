@@ -12,9 +12,9 @@ import '@vaadin/vaadin-button';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import '../contact-form/contact-form';
-import Status from "../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status";
+import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
-import {Lumo} from "../../utils/lumo";
+import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
 
 @customElement('list-view')

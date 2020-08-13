@@ -2,8 +2,8 @@ import { Router } from '@vaadin/router';
 
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
-import {isUserLoggedIn} from "./generated/SecurityEndpoint";
-import {logout} from "@vaadin/flow-frontend/Connect"
+import { isUserLoggedIn } from './generated/SecurityEndpoint';
+import { logout } from '@vaadin/flow-frontend/Connect';
 
 import './utils/lumo';
 

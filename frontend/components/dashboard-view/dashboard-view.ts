@@ -2,7 +2,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-charts';
 import { getStats } from '../../generated/ServiceEndpoint';
-import {Lumo} from "../../utils/lumo";
+import { Lumo } from '../../utils/lumo';
 import styles from './dashboard-view.css';
 
 @customElement('dashboard-view')
