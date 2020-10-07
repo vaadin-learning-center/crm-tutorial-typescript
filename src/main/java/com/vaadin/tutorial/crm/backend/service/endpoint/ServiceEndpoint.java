@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.flow.server.connect.Deferrable;
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import com.vaadin.tutorial.crm.backend.entity.Company;
@@ -34,6 +35,7 @@ public class ServiceEndpoint {
     return Status.values();
   }
 
+  @Deferrable
   public void saveContact(Contact contact) {
     com.vaadin.tutorial.crm.backend.entity.Contact dbContact = contactService.find(contact.getId())
         .orElse(new com.vaadin.tutorial.crm.backend.entity.Contact());
@@ -50,6 +52,7 @@ public class ServiceEndpoint {
     contactService.save(dbContact);
   }
 
+  @Deferrable
   public void deleteContact(Contact contact) {
     contactService.find(contact.getId()).ifPresent(contactService::delete);
 
