@@ -1,11 +1,22 @@
-import { Router } from '@vaadin/router';
+import {Router} from '@vaadin/router';
 
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
-import { isUserLoggedIn } from './generated/SecurityEndpoint';
-import { logout } from '@vaadin/flow-frontend/Connect';
+import {isUserLoggedIn} from './generated/SecurityEndpoint';
+import {logout} from '@vaadin/flow-frontend/Connect';
 
 import './utils/lumo';
+
+import client from './generated/connect-client.default';
+import {deferredCallCallback} from './utils/deferred-call-callback'
+import {invalidSessionMiddleware} from './utils/invalid-session-middleware';
+
+// Setup the client for endpoint calls
+client.onDeferredCall = deferredCallCallback;
+client.middlewares.push(invalidSessionMiddleware);
+if (navigator.onLine) {
+  client.processDeferredCalls();
+}
 
 const routes = [
   {
@@ -59,5 +70,5 @@ const routes = [
 ];
 
 // Vaadin router needs an outlet in the index.html page to display views
-const router = new Router(document.querySelector('#outlet'));
+export const router = new Router(document.querySelector('#outlet'));
 router.setRoutes(routes);
