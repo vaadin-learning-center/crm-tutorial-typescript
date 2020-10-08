@@ -63,7 +63,8 @@ export class ActionableNotificationElement extends NotificationElement {
     themeVariant: NotificationThemeVariant,
     message: string,
     actions?: [...A[]],
-    duration: number = 4000): Promise<A | ''> {
+    duration: number = 4000
+  ): Promise<A | ''> {
     this.setAttribute('theme', themeVariant);
     this.message = message;
     this.actions = actions !== undefined ? actions : [];
