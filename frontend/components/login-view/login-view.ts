@@ -3,7 +3,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login/@types/interfaces';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
-import { LoginResult, login } from '@vaadin/flow-frontend/Connect';
+import { LoginResult, login } from '@vaadin/flow-frontend';
 import { Lumo } from '../../utils/lumo';
 import styles from './login-view.css';
 
@@ -28,13 +28,23 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   static styles = [Lumo, styles];
 
-  constructor(onSuccess?:(result:LoginResult)=>void){
+  constructor(){
     super();
-    const defaultonSuccess = () => {
+    this.onSuccess = () => {
       Router.go(this.returnUrl);
     };
-    this.onSuccess = onSuccess || defaultonSuccess;
   }
+
+  async showOverlay(): Promise<LoginResult>{
+    return new Promise(resolve => {
+      this.onSuccess = (result: LoginResult) => {
+        this.remove();
+        resolve(result);
+      }
+      document.body.append(this);
+    });
+  }
+
   render() {
     return html`
       <vaadin-login-overlay
@@ -50,15 +60,17 @@ export class LoginView extends LitElement implements AfterEnterObserver {
     this.returnUrl = location.redirectFrom || this.returnUrl;
   }
 
-  async login(event: CustomEvent) {
+  async login(event: CustomEvent): Promise<LoginResult> {
     const result = await login(event.detail.username, event.detail.password);
     this.error = result.error;
-    this.errorTitle = result.errorTitle;
-    this.errorMessage = result.errorMessage;
+    this.errorTitle = result.errorTitle || this.errorTitle;
+    this.errorMessage = result.errorMessage || this.errorMessage;
 
     if (!result.error) {
       this.onSuccess(result);
     }
+
+    return result;
   }
 
   private get i18n(): LoginI18n {
