@@ -1,9 +1,9 @@
-import { Router } from '@vaadin/router';
+import { Commands, Context, Router } from '@vaadin/router';
 
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
 import { isUserLoggedIn } from './generated/SecurityEndpoint';
-import { logout } from '@vaadin/flow-frontend/Connect';
+import { logout } from '@vaadin/flow-frontend';
 
 import './utils/lumo';
 
@@ -26,7 +26,7 @@ const routes = [
   //    `<a href="/logout">Log out</a>`
    {
      path: '/logout',
-     action: async (_: Router.Context, commands: Router.Commands) => {
+     action: async (_: Context, commands: Commands) => {
        await logout();
        return commands.redirect('/');
      }
