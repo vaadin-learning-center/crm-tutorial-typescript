@@ -11,8 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>18.0.0.alpha1</vaadin.version>
-        <flow.version>5.0-SNAPSHOT</flow.version>
+        <vaadin.version>18.0.0.rc2</vaadin.version>
+        <flow.version>5.0.0</flow.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
@@ -30,7 +30,7 @@
             <url>https://repo1.maven.org/maven2/</url>
             <snapshots><enabled>false</enabled></snapshots>
         </pluginRepository>
-        <!-- The current version of Vaadin 17 is a pre-release version -->
+        <!-- The current version of Vaadin 18 is a pre-release version -->
         <pluginRepository>
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases/</url>
@@ -53,7 +53,7 @@
             <url>https://maven.vaadin.com/vaadin-addons</url>
             <snapshots><enabled>false</enabled></snapshots>
         </repository>
-        <!-- The current version of Vaadin 17 is a pre-release version -->
+        <!-- The current version of Vaadin 18 is a pre-release version -->
         <repository>
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases/</url>
