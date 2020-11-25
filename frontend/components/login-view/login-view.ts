@@ -3,7 +3,8 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login/@types/interfaces';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
-import { LoginResult, login } from '@vaadin/flow-frontend';
+import type { LoginResult } from '@vaadin/flow-frontend';
+import { login } from '../../auth';
 import { Lumo } from '../../utils/lumo';
 import styles from './login-view.css';
 
@@ -13,9 +14,6 @@ export class LoginView extends LitElement implements AfterEnterObserver {
   @property({type: Boolean})
   private error = false;
 
-  @property({type: Boolean})
-  private open = true;
-
   @property()
   private errorTitle = '';
 
@@ -24,31 +22,31 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   private returnUrl = '/';
 
-  private onSuccess: (result:LoginResult) => void;
+  private onSuccess = (_: LoginResult) => { Router.go(this.returnUrl) };
 
   static styles = [Lumo, styles];
 
-  constructor(){
-    super();
-    this.onSuccess = () => {
-      Router.go(this.returnUrl);
-    };
-  }
+  private static overlayResult?: Promise<LoginResult>;
+  static async showOverlay(): Promise<LoginResult> {
+    if (this.overlayResult) {
+      return this.overlayResult;
+    }
 
-  async showOverlay(): Promise<LoginResult>{
-    return new Promise(resolve => {
-      this.onSuccess = (result: LoginResult) => {
-        this.remove();
+    const overlay = new this();
+    return this.overlayResult = new Promise(resolve => {
+      overlay.onSuccess = result => {
+        this.overlayResult = undefined;
+        overlay.remove();
         resolve(result);
       }
-      document.body.append(this);
+      document.body.append(overlay);
     });
   }
 
   render() {
     return html`
       <vaadin-login-overlay
-        ?opened="${this.open}" 
+        opened 
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    
