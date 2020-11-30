@@ -11,6 +11,7 @@ import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import '../contact-form/contact-form';
+import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
 
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
@@ -70,34 +71,40 @@ export class ListView extends LitElement {
             .items=${this.contacts}
             .selectedItems=${this.selectedContact ? [this.selectedContact] : []}
             @active-item-changed=${this.onGridSelectionChanged}
+            multi-sort
           >
             <vaadin-grid-column
               path="firstName"
               header="First name"
+              .headerRenderer="${sortAndFilterGridHeaderRenderer}"
               auto-width
             ></vaadin-grid-column>
 
             <vaadin-grid-column
               path="lastName"
               header="Last name"
+              .headerRenderer="${sortAndFilterGridHeaderRenderer}"
               auto-width
             ></vaadin-grid-column>
 
             <vaadin-grid-column
               path="company.name"
               header="Company"
+              .headerRenderer="${sortAndFilterGridHeaderRenderer}"
               auto-width
             ></vaadin-grid-column>
 
             <vaadin-grid-column
               path="email"
               header="Email"
+              .headerRenderer="${sortAndFilterGridHeaderRenderer}"
               auto-width
             ></vaadin-grid-column>
 
             <vaadin-grid-column
               path="status"
               header="Status"
+              .headerRenderer="${sortAndFilterGridHeaderRenderer}"
               auto-width
             ></vaadin-grid-column>
           </vaadin-grid>
