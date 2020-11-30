@@ -1,4 +1,4 @@
-import { customElement, html, LitElement, property } from 'lit-element';
+import { customElement, html, LitElement, property, query } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import {
   find,
@@ -8,6 +8,7 @@ import {
   findAllCompanies,
 } from '../../generated/ServiceEndpoint';
 import '@vaadin/vaadin-grid';
+import { GridElement } from '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import '../contact-form/contact-form';
@@ -22,6 +23,9 @@ import styles from './list-view.css';
 
 @customElement('list-view')
 export class ListView extends LitElement {
+  @query('vaadin-grid')
+  private grid!: GridElement;
+
   @property({ type: Array })
   private contacts: Contact[] = [];
 
@@ -127,11 +131,37 @@ export class ListView extends LitElement {
   }
 
   private async saveContact(contact: Contact) {
+    // optimistic UI update
+    this.clearSelection();
+    const idx = this.contacts.findIndex(c => c.id === contact.id);
+    if (idx > -1) {
+      // replace the contact with the matching id
+      this.contacts[idx] = contact;
+      // explicitly triggering a grid refresh because the contacts array is update in-place
+      this.grid.clearCache();
+    } else {
+      // append a new contact to the contacts list
+      this.contacts.push(contact);
+      // explicitly triggering a grid refresh because the contacts array is update in-place
+      this.grid.clearCache();
+    }
+
+    // update the backend and re-sync the UI
     await saveContact(contact);
     await this.refreshContacts();
   }
 
   private async deleteContact(contact: Contact) {
+    // optimistic UI update
+    this.clearSelection();
+    const idx = this.contacts.findIndex(c => c.id === contact.id);
+    if (idx > -1) {
+      this.contacts.splice(idx, 1);
+      // explicitly triggering a grid refresh because the contacts array is update in-place
+      this.grid.clearCache();
+    }
+
+    // update the backend and re-sync the UI
     await deleteContact(contact);
     await this.refreshContacts();
   }
