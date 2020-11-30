@@ -80,12 +80,14 @@ export class ContactForm extends LitElement {
       ></vaadin-combo-box>
 
       <div class="buttons">
-        <vaadin-button @click=${this.save} theme="primary" ?disabled="${this.binder.invalid || this.binder.submitting}">Save</vaadin-button>
-        <vaadin-button @click=${this.delete} theme="error" ?disabled="${!this.binder.value}"
-          >Delete</vaadin-button
-        >
+        <vaadin-button @click=${this.save} theme="primary"
+            ?disabled="${this.binder.invalid || this.binder.submitting || !this.binder.dirty}"
+            >Save</vaadin-button>
+        <vaadin-button @click=${this.delete} theme="error"
+            ?disabled="${this.binder.value.id === 0}"
+            >Delete</vaadin-button>
         <vaadin-button @click=${this.cancel} theme="tertiary" 
-        >Cancel</vaadin-button>
+            >Cancel</vaadin-button>
       </div>
     `;
   }
