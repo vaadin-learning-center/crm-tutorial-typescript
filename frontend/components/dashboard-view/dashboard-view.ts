@@ -4,8 +4,9 @@ import '@vaadin/vaadin-charts';
 import { Lumo } from '../../utils/lumo';
 import styles from './dashboard-view.css';
 import { rootStore } from '../../stores';
+import { DashboardStore } from './dashboard-store';
 
-const state = rootStore.dashboard;
+const state = new DashboardStore(rootStore);
 
 @customElement('dashboard-view')
 export class DashboardView extends MobxLitElement {

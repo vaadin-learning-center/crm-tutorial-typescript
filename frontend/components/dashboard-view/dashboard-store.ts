@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import type { RootStore } from './index';
+import type { RootStore } from '../../stores';
 
 export class DashboardStore {
   root: RootStore;

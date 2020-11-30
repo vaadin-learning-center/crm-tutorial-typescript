@@ -1,8 +1,8 @@
 import { makeAutoObservable } from 'mobx';
-import type { RootStore } from './index';
+import type { RootStore } from '../../stores';
 
-import Contact from '../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
-import ContactModel from '../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 
 export class ContactListStore {
   root: RootStore;

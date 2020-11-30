@@ -11,8 +11,9 @@ import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Cont
 import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
 import { rootStore } from '../../stores';
+import { ContactListStore } from './list-store';
 
-const state = rootStore.contactList;
+const state = new ContactListStore(rootStore);
 
 @customElement('list-view')
 export class ListView extends MobxLitElement {
