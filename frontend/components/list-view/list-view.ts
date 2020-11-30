@@ -2,18 +2,20 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import {
   find,
+  saveContact,
+  deleteContact,
   getContactStatuses,
   findAllCompanies,
 } from '../../generated/ServiceEndpoint';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
-
-import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import '../contact-form/contact-form';
-import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
+
+import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
+import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
 
@@ -23,7 +25,7 @@ export class ListView extends LitElement {
   private contacts: Contact[] = [];
 
   @property({ type: Object })
-  private currentContact: Contact | null = null;
+  private selectedContact?: Contact = undefined;
 
   @property({ type: Array })
   private companies: Company[] = [];
@@ -31,26 +33,34 @@ export class ListView extends LitElement {
   @property({ type: Array })
   private statuses: Status[] = [];
 
-  private filterText = '';
+  @property({ type: String })
+  private filter = '';
 
   static styles = [Lumo, styles];
+
+  async connectedCallback() {
+    super.connectedCallback();
+    this.updateContacts();
+    this.statuses = await getContactStatuses();
+    this.companies = await findAllCompanies();
+  }
 
   render() {
     return html`
       <div
         class=${classMap({
           wrapper: true,
-          editing: this.currentContact != null,
+          editing: Boolean(this.selectedContact),
         })}
       >
         <div class="toolbar">
           <vaadin-text-field
             clear-button-visible
             placeholder="Search"
-            @input=${(e: any) => this.filter(e.target.value)}
+            @input=${(e: any) => this.setFilter(e.target.value)}
           ></vaadin-text-field>
           <vaadin-button
-            @click=${() => (this.currentContact = ContactModel.createEmptyValue())}
+            @click=${() => this.addNewContact()}
             >Add contact</vaadin-button
           >
         </div>
@@ -58,11 +68,8 @@ export class ListView extends LitElement {
           <vaadin-grid
             class="contacts-grid"
             .items=${this.contacts}
-            .selectedItems=${this.currentContact ? [this.currentContact] : []}
-            @active-item-changed=${(e: {
-              detail: { value: Contact | null };
-              target: any;
-            }) => (this.currentContact = e.detail.value)}
+            .selectedItems=${this.selectedContact ? [this.selectedContact] : []}
+            @active-item-changed=${this.onGridSelectionChanged}
           >
             <vaadin-grid-column
               path="firstName"
@@ -96,40 +103,51 @@ export class ListView extends LitElement {
           </vaadin-grid>
           <contact-form
             class="contact-form"
-            .contact=${this.currentContact}
+            .contact=${this.selectedContact}
             .companies=${this.companies}
             .statuses=${this.statuses}
-            @contact-saved=${this.refreshContacts}
-            @contact-deleted=${this.refreshContacts}
-            @cancel-editing=${this.clear}
+            .onSubmit="${(contact: Contact) => this.saveContact(contact)}"
+            .onDelete="${(contact: Contact) => this.deleteContact(contact)}"
+            .onCancel="${() => this.clearSelection()}"
           ></contact-form>
         </div>
       </div>
     `;
   }
 
-  async refreshContacts() {
-    this.clear();
+  private addNewContact() {
+    this.selectedContact = ContactModel.createEmptyValue();
+  }
+
+  private async saveContact(contact: Contact) {
+    await saveContact(contact);
+    await this.refreshContacts();
+  }
+
+  private async deleteContact(contact: Contact) {
+    await deleteContact(contact);
+    await this.refreshContacts();
+  }
+
+  private async refreshContacts() {
+    this.clearSelection();
     await this.updateContacts();
   }
 
-  clear() {
-    this.currentContact = null;
+  private clearSelection() {
+    this.selectedContact = undefined;
   }
 
-  async filter(filter: string) {
-    console.log(filter);
-    this.filterText = filter;
-    this.updateContacts();
+  private async setFilter(filter: string) {
+    this.filter = filter;
+    await this.updateContacts();
   }
 
-  async updateContacts() {
-    this.contacts = await find(this.filterText);
+  private async updateContacts() {
+    this.contacts = await find(this.filter);
   }
 
-  async firstUpdated() {
-    this.filter('');
-    this.statuses = await getContactStatuses();
-    this.companies = await findAllCompanies();
+  private onGridSelectionChanged(e: { detail: { value?: Contact } }) {
+    this.selectedContact = e.detail.value;
   }
 }

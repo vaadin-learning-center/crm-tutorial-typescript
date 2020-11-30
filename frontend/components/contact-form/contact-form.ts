@@ -7,19 +7,40 @@ import '@vaadin/vaadin-button';
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { Binder, field } from '@vaadin/form';
-import { saveContact, deleteContact } from '../../generated/ServiceEndpoint';
 import { Lumo } from '../../utils/lumo';
 
 import styles from './contact-form.css';
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {
+
+  /*
+   * The `submit` action cannot be handled with a DOM event
+   * handler because the form needs to call the submit handler
+   * and catch any validation exceptions that it could trigger.
+   *
+   * binder.submitTo(onSubmit);
+   *
+   * The other actions could be handled through DOM events
+   * but for consistency reasons are implemented in the same way
+   * as `submit`.
+   */
+  @property({ type: Function })
+  onSubmit = (_: Contact) => Promise.resolve();
+
+  @property({ type: Function })
+  onDelete = (_: Contact) => Promise.resolve();
+
+  @property({ type: Function })
+  onCancel = (_: Contact) => Promise.resolve();
+
   @property({ type: Array })
   companies: Company[] = [];
 
   @property({ type: Array })
-  statuses: string[] = [];
+  statuses: Status[] = [];
 
   @property({ type: Object })
   set contact(value: Contact){
@@ -69,32 +90,15 @@ export class ContactForm extends LitElement {
     `;
   }
 
-  async save() {
-      await this.binder.submitTo(saveContact);
-      this.dispatchEvent(
-        new CustomEvent('contact-saved', {
-          bubbles: true,
-          composed: true
-        })
-      );
+  save() {
+    return this.binder.submitTo(this.onSubmit);
   }
 
-  async delete() {
-    await deleteContact(this.binder.value);
-    this.dispatchEvent(
-      new CustomEvent('contact-deleted', {
-        bubbles: true,
-        composed: true
-      })
-    );
+  delete() {
+    return this.onDelete(this.binder.value);
   }
 
   cancel() {
-    this.dispatchEvent(
-      new CustomEvent('cancel-editing', {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    return this.onCancel(this.binder.value);
   }
 }

@@ -65,7 +65,7 @@ export class LoginView extends LitElement implements AfterEnterObserver {
     const result = await login(event.detail.username, event.detail.password);
     this.error = result.error;
     this.errorTitle = result.errorTitle || this.errorTitle;
-    this.errorMessage = result.errorMessage || this.errorMessage;
+    this.errorMessage = result.errorMessage || this.errorMessage;
 
     if (!result.error) {
       this.onSuccess(result);
