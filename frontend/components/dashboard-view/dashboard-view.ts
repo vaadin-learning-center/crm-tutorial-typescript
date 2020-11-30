@@ -1,35 +1,27 @@
-import { customElement, html, LitElement, property } from 'lit-element';
-
+import { customElement, html } from 'lit-element';
+import { MobxLitElement } from '@adobe/lit-mobx';
 import '@vaadin/vaadin-charts';
-import { getStats } from '../../generated/ServiceEndpoint';
 import { Lumo } from '../../utils/lumo';
 import styles from './dashboard-view.css';
+import { rootStore } from '../../stores';
+
+const state = rootStore.dashboard;
 
 @customElement('dashboard-view')
-export class DashboardView extends LitElement {
-  @property()
-  private numberOfContacts = 0;
-
-  @property()
-  private chartValues: any = [];
+export class DashboardView extends MobxLitElement {
 
   static styles = [Lumo, styles];
 
   render() {
     return html`
       <span class="contact-stats">
-        ${this.numberOfContacts} contacts
+        ${state.contactCount} contacts
       </span>
 
       <vaadin-chart type="pie">
-        <vaadin-chart-series .values=${this.chartValues}></vaadin-chart-series>
+        <vaadin-chart-series .values=${state.contactCountByCompanyName}>
+        </vaadin-chart-series>
       </vaadin-chart>
     `;
-  }
-
-  async firstUpdated() {
-    const stats = await getStats();
-    this.numberOfContacts = stats.contacts;
-    this.chartValues = Object.entries(stats.companyStats);
   }
 }

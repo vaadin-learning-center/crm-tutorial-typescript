@@ -40,7 +40,7 @@ export class ListView extends MobxLitElement {
         <div class="content">
           <vaadin-grid
             class="contacts-grid"
-            .items=${state.contacts}
+            .items=${state.filteredContacts}
             .selectedItems=${state.selectedContact ? [state.selectedContact] : []}
             @active-item-changed=${this.onGridSelectionChanged}
             multi-sort
@@ -83,8 +83,8 @@ export class ListView extends MobxLitElement {
           <contact-form
             class="contact-form"
             .contact=${state.selectedContact}
-            .companies=${state.companies}
-            .statuses=${state.statuses}
+            .companies=${rootStore.entities.companies}
+            .statuses=${rootStore.entities.statuses}
             .onSubmit="${(contact: Contact) => state.saveContact(contact)}"
             .onDelete="${(contact: Contact) => state.deleteContact(contact)}"
             .onCancel="${() => state.clearSelection()}"
