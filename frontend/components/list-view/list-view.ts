@@ -145,6 +145,12 @@ export class ListView extends LitElement {
 
   private async updateContacts() {
     this.contacts = await find(this.filter);
+
+    // re-sync the editor form with the grid (so that it works with the same JS contact instance)
+    // This allows to keep the grid highlighting for the selected contact when the filter changes
+    if (this.selectedContact && this.selectedContact.id !== 0) {
+      this.selectedContact = this.contacts.find(c => c.id === this.selectedContact?.id);
+    }
   }
 
   private onGridSelectionChanged(e: { detail: { value?: Contact } }) {
