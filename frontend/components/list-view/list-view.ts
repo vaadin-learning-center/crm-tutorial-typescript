@@ -1,79 +1,47 @@
-import { customElement, html, LitElement, property, query } from 'lit-element';
+import { customElement, html } from 'lit-element';
+import { MobxLitElement } from '@adobe/lit-mobx';
 import { classMap } from 'lit-html/directives/class-map';
-import {
-  find,
-  saveContact,
-  deleteContact,
-  getContactStatuses,
-  findAllCompanies,
-} from '../../generated/ServiceEndpoint';
 import '@vaadin/vaadin-grid';
-import { GridElement } from '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import '../contact-form/contact-form';
 import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
 
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
-import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
-import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
+import { rootStore } from '../../stores';
+
+const state = rootStore.contactList;
 
 @customElement('list-view')
-export class ListView extends LitElement {
-  @query('vaadin-grid')
-  private grid!: GridElement;
-
-  @property({ type: Array })
-  private contacts: Contact[] = [];
-
-  @property({ type: Object })
-  private selectedContact?: Contact = undefined;
-
-  @property({ type: Array })
-  private companies: Company[] = [];
-
-  @property({ type: Array })
-  private statuses: Status[] = [];
-
-  @property({ type: String })
-  private filter = '';
-
+export class ListView extends MobxLitElement {
   static styles = [Lumo, styles];
-
-  async connectedCallback() {
-    super.connectedCallback();
-    this.updateContacts();
-    this.statuses = await getContactStatuses();
-    this.companies = await findAllCompanies();
-  }
 
   render() {
     return html`
       <div
         class=${classMap({
           wrapper: true,
-          editing: Boolean(this.selectedContact),
+          editing: Boolean(state.selectedContact),
         })}
       >
         <div class="toolbar">
           <vaadin-text-field
             clear-button-visible
             placeholder="Search"
-            @input=${(e: any) => this.setFilter(e.target.value)}
+            @input=${(e: any) => state.setFilter(e.target.value)}
           ></vaadin-text-field>
           <vaadin-button
-            @click=${() => this.addNewContact()}
+            @click=${() => state.addNewContact()}
             >Add contact</vaadin-button
           >
         </div>
         <div class="content">
           <vaadin-grid
             class="contacts-grid"
-            .items=${this.contacts}
-            .selectedItems=${this.selectedContact ? [this.selectedContact] : []}
+            .items=${state.contacts}
+            .selectedItems=${state.selectedContact ? [state.selectedContact] : []}
             @active-item-changed=${this.onGridSelectionChanged}
             multi-sort
           >
@@ -114,83 +82,30 @@ export class ListView extends LitElement {
           </vaadin-grid>
           <contact-form
             class="contact-form"
-            .contact=${this.selectedContact}
-            .companies=${this.companies}
-            .statuses=${this.statuses}
-            .onSubmit="${(contact: Contact) => this.saveContact(contact)}"
-            .onDelete="${(contact: Contact) => this.deleteContact(contact)}"
-            .onCancel="${() => this.clearSelection()}"
+            .contact=${state.selectedContact}
+            .companies=${state.companies}
+            .statuses=${state.statuses}
+            .onSubmit="${(contact: Contact) => state.saveContact(contact)}"
+            .onDelete="${(contact: Contact) => state.deleteContact(contact)}"
+            .onCancel="${() => state.clearSelection()}"
           ></contact-form>
         </div>
       </div>
     `;
   }
 
-  private addNewContact() {
-    this.selectedContact = ContactModel.createEmptyValue();
-  }
-
-  private async saveContact(contact: Contact) {
-    // optimistic UI update
-    this.clearSelection();
-    const idx = this.contacts.findIndex(c => c.id === contact.id);
-    if (idx > -1) {
-      // replace the contact with the matching id
-      this.contacts[idx] = contact;
-      // explicitly triggering a grid refresh because the contacts array is update in-place
-      this.grid.clearCache();
-    } else {
-      // append a new contact to the contacts list
-      this.contacts.push(contact);
-      // explicitly triggering a grid refresh because the contacts array is update in-place
-      this.grid.clearCache();
-    }
-
-    // update the backend and re-sync the UI
-    await saveContact(contact);
-    await this.refreshContacts();
-  }
-
-  private async deleteContact(contact: Contact) {
-    // optimistic UI update
-    this.clearSelection();
-    const idx = this.contacts.findIndex(c => c.id === contact.id);
-    if (idx > -1) {
-      this.contacts.splice(idx, 1);
-      // explicitly triggering a grid refresh because the contacts array is update in-place
-      this.grid.clearCache();
-    }
-
-    // update the backend and re-sync the UI
-    await deleteContact(contact);
-    await this.refreshContacts();
-  }
-
-  private async refreshContacts() {
-    this.clearSelection();
-    await this.updateContacts();
-  }
-
-  private clearSelection() {
-    this.selectedContact = undefined;
-  }
-
-  private async setFilter(filter: string) {
-    this.filter = filter;
-    await this.updateContacts();
-  }
-
-  private async updateContacts() {
-    this.contacts = await find(this.filter);
-
-    // re-sync the editor form with the grid (so that it works with the same JS contact instance)
-    // This allows to keep the grid highlighting for the selected contact when the filter changes
-    if (this.selectedContact && this.selectedContact.id !== 0) {
-      this.selectedContact = this.contacts.find(c => c.id === this.selectedContact?.id);
-    }
-  }
-
   private onGridSelectionChanged(e: { detail: { value?: Contact } }) {
-    this.selectedContact = e.detail.value;
+    // Changing the state synchronously causes a MobX warning
+    //
+    // state.setSelected(e.detail.value)
+    //
+    // [MobX] Since strict-mode is enabled, changing (observed) observable
+    // values without using an action is not allowed.
+    // Tried to modify: ContactListState@2.selectedContactId
+    //
+    // Most likely, it's because the first time this event is triggered by
+    // vaadin-grid synchronously at the first render, which itself happens
+    // as a MobX reaction and is not expected to call actions directly.
+    setTimeout(() => state.setSelectedContact(e.detail.value), 0);
   }
 }

@@ -4,7 +4,7 @@ import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login/@types/interfaces';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
-import { login } from '../../auth';
+import { rootStore } from '../../stores';
 import { Lumo } from '../../utils/lumo';
 import styles from './login-view.css';
 
@@ -60,7 +60,7 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   async login(event: CustomEvent): Promise<LoginResult> {
     this.error = false;
-    const result = await login(event.detail.username, event.detail.password);
+    const result = await rootStore.auth.login(event.detail.username, event.detail.password);
     this.error = result.error;
     this.errorTitle = result.errorTitle || this.errorTitle;
     this.errorMessage = result.errorMessage || this.errorMessage;

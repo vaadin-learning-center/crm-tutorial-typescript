@@ -1,8 +1,8 @@
 import {ConnectClient, InvalidSessionMiddleware} from '@vaadin/flow-frontend';
-import {setSessionExpired} from './auth';
+import {rootStore} from './stores';
 const client = new ConnectClient({prefix: 'connect', middlewares: [new InvalidSessionMiddleware(
     async () => {
-      setSessionExpired();
+      rootStore.auth.setSessionExpired();
       const {LoginView} = await import ('./components/login-view/login-view');
       return LoginView.showOverlay();
     }
