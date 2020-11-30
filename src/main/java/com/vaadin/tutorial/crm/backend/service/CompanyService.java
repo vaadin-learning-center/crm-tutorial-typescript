@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompanyService {
 
-  private CompanyRepository companyRepository;
+  private final CompanyRepository companyRepository;
 
   public CompanyService(CompanyRepository companyRepository) {
     this.companyRepository = companyRepository;
@@ -23,5 +23,17 @@ public class CompanyService {
 
   public Optional<Company> findById(Long id) {
     return companyRepository.findById(id);
+  }
+
+  public long count() {
+    return companyRepository.count();
+  }
+
+  public void delete(Company contact) {
+    companyRepository.delete(contact);
+  }
+
+  public void save(Company contact) {
+    companyRepository.save(contact);
   }
 }

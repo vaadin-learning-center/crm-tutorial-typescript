@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
@@ -54,7 +55,9 @@ public class ContactService {
 
   @PostConstruct
   public void populateTestData() {
+    boolean companyInitMode = false;
     if (companyRepository.count() == 0) {
+      companyInitMode = true;
       companyRepository.saveAll(Stream.of("Path-Way Electronics", "E-Tech Management", "Path-E-Tech Management")
           .map(Company::new).collect(Collectors.toList()));
     }
@@ -79,6 +82,14 @@ public class ContactService {
             contact.setEmail(email);
             return contact;
           }).collect(Collectors.toList()));
+    }
+
+    if (companyInitMode) {
+      companyRepository.saveAll(
+              IntStream.range(1, 201)
+                      .mapToObj(i -> String.format("Zenith %03d Inc", i))
+                      .map(Company::new)
+                      .collect(Collectors.toList()));
     }
   }
 
