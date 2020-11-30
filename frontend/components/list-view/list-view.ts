@@ -4,6 +4,7 @@ import { classMap } from 'lit-html/directives/class-map';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
+import type { ComboBoxDataProvider } from '@vaadin/vaadin-combo-box';
 import '../contact-form/contact-form';
 import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
 
@@ -18,6 +19,20 @@ const state = new ContactListStore(rootStore);
 @customElement('list-view')
 export class ListView extends MobxLitElement {
   static styles = [Lumo, styles];
+
+  private companyCbDataProvider: ComboBoxDataProvider = (params, callback) => {
+    console.log(`[combo-box] fetching a page of companies: params = `, params);
+    const filtered = rootStore.entities.companies
+      .filter(c => {
+        const filter = params.filter.toLowerCase();
+        return !filter || c.name.toLowerCase().includes(filter);
+      });
+
+    const slice = filtered.slice(params.page * params.pageSize,
+      params.page * params.pageSize + params.pageSize);
+
+    callback(slice, filtered.length);
+  }
 
   render() {
     return html`
@@ -84,7 +99,7 @@ export class ListView extends MobxLitElement {
           <contact-form
             class="contact-form"
             .contact=${state.selectedContact}
-            .companies=${rootStore.entities.companies}
+            .companies=${this.companyCbDataProvider}
             .statuses=${rootStore.entities.statuses}
             .onSubmit="${(contact: Contact) => state.saveContact(contact)}"
             .onDelete="${(contact: Contact) => state.deleteContact(contact)}"

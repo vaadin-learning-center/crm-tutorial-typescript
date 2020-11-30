@@ -14,12 +14,6 @@ export class CompanyListStore {
     this.root = root;
   }
 
-  get filteredCompanies() {
-    const filter = this.filter.toLowerCase();
-    return this.root.entities.companies.filter(c =>
-      c.name.toLowerCase().includes(filter));
-  }
-
   get selectedCompany() {
     return this.selectedCompanyId === 0
       ? CompanyModel.createEmptyValue()
