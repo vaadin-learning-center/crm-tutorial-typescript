@@ -59,11 +59,4 @@ public class ServiceEndpoint {
     return companyService.findAll();
   }
 
-  public Map<String, Object> getStats() {
-    Map<String, Object> stats = new HashMap<>();
-    stats.put("contacts", contactService.count());
-    stats.put("companyStats", companyService.getStats());
-
-    return stats;
-  }
 }
