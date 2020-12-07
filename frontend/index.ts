@@ -7,7 +7,7 @@ import { logout } from '@vaadin/flow-frontend';
 import './utils/lumo';
 
 const isUserLoggedIn = function() {
-  return !!localStorage.getItem('loggedIn');
+  return localStorage.getItem('loggedIn') === 'true';
 }
 
 const routes = [
