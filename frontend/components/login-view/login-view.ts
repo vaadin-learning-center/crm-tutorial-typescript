@@ -31,6 +31,7 @@ export class LoginView extends LitElement implements AfterEnterObserver {
   constructor(){
     super();
     this.onSuccess = () => {
+      sessionStorage.setItem('loggedIn', String(true));
       Router.go(this.returnUrl);
     };
   }

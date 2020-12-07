@@ -2,10 +2,13 @@ import { Commands, Context, Router } from '@vaadin/router';
 
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
-import { isUserLoggedIn } from './generated/SecurityEndpoint';
 import { logout } from '@vaadin/flow-frontend';
 
 import './utils/lumo';
+
+const isUserLoggedIn = function() {
+  return !!sessionStorage.getItem('loggedIn');
+}
 
 const routes = [
   {
@@ -28,13 +31,14 @@ const routes = [
      path: '/logout',
      action: async (_: Context, commands: Commands) => {
        await logout();
+       sessionStorage.setItem('loggedIn', String(false));
        return commands.redirect('/');
      }
    },
   {
     path: '/',
     action: async (_: Router.Context, commands: Router.Commands) => {
-      if (!await isUserLoggedIn()) {
+      if (!isUserLoggedIn()) {
         return commands.redirect('/login');
       }
       return undefined;
