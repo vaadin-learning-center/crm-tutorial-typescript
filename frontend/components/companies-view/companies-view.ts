@@ -6,6 +6,7 @@ import {
   initStates,
   deleteCompany,
   saveCompany,
+  selectAllCompanies,
 } from '../../store/entities';
 import {
   addNewCompany,
@@ -25,7 +26,7 @@ import '@vaadin/vaadin-button';
 import '../company-form/company-form';
 import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
 
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
+import type { Company } from '../../store/entities';
 import State from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company/State';
 import { Lumo } from '../../utils/lumo';
 import styles from './companies-view.css';
@@ -53,7 +54,7 @@ export class CompaniesView extends connect(store)(LitElement) {
 
   stateChanged(state: CompaniesViewRootState) {
     this.filter = state.companyList.filter;
-    this.companies = state.entities.companies;
+    this.companies = selectAllCompanies(state.entities.companies);
     this.selectedCompany = selectedCompanySelector(state);
     this.states = state.entities.states;
 

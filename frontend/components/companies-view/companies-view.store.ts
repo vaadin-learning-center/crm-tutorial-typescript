@@ -1,7 +1,6 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import CompanyModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/CompanyModel';
+import {createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import type Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company'
+import type { Company } from '../../store/entities';
 import type { RootState } from '../../store';
 
 export interface CompaniesViewState {
@@ -44,18 +43,18 @@ export const filteredGridContentSelector = createSelector(
   (state: CompaniesViewRootState) => state.companyList.filter,
   (companies, filter) => {
     console.log('calculating the filtered companies snapshot');
-    return companies
-      .filter(c => filter === '' ||
-        matchers['name'](c, filter) ||
-        matchers['description'](c, filter) ||
-        matchers['employees.length'](c, filter) ||
-        matchers['state'](c, filter))
-      .map(c =>
+    return companies.ids
+      .filter(id => filter === '' ||
+        matchers['name'](companies.entities[id]!, filter) ||
+        matchers['description'](companies.entities[id]!, filter) ||
+        matchers['employees.length'](companies.entities[id]!, filter) ||
+        matchers['state'](companies.entities[id]!, filter))
+      .map(id =>
         [
-          extractors['name'](c),
-          extractors['description'](c),
-          extractors['employees.length'](c),
-          extractors['state'](c)
+          extractors['name'](companies.entities[id]!),
+          extractors['description'](companies.entities[id]!),
+          extractors['employees.length'](companies.entities[id]!),
+          extractors['state'](companies.entities[id]!)
         ].join(';'))
       .join('\n');
   }
@@ -65,9 +64,16 @@ export const selectedCompanySelector = createSelector(
   (state: CompaniesViewRootState) => state.entities.companies,
   (state: CompaniesViewRootState) => state.companyList.selectedCompanyId,
   (companies, selectedCompanyId) => {
+    if (selectedCompanyId === undefined) {
+      return undefined;
+    }
     return selectedCompanyId === 0
-      ? CompanyModel.createEmptyValue()
-      : companies.find(c => c.id === selectedCompanyId);
+      ? {
+        id: 0,
+        name: '',
+        employees: [],
+      } as Company
+      : companies.entities[selectedCompanyId];
   }
 );
 

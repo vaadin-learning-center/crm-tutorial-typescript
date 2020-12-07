@@ -1,35 +1,81 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import * as ContactEndpoint from '../generated/ServiceEndpoint';
 import * as CompanyEndpoint from '../generated/CompanyEndpoint';
 
-import type Company from '../generated/com/vaadin/tutorial/crm/backend/entity/Company';
-import type Contact from '../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import type BackendCompany from '../generated/com/vaadin/tutorial/crm/backend/entity/Company';
+import type BackendContact from '../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import type Status from '../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import type State from '../generated/com/vaadin/tutorial/crm/backend/entity/Company/State';
 import type { RootState } from './index';
 
-// Use a custom helper to avoid updating the contacts / companies state properties
-// when the actual entities data has not changed, so that the `contacts.value` /
-// `companies.value` state property remains the same JS instance, so that selectors
-// that only check for shallow equality are not triggered again on the same data,
-// so that there is no performance hit when an optimistic update to the
-// `contacts.value` / `companies.value` property is successful, i.e. the actual
-// data eventually received from the backend matches the data already present in the
-// store.
-import { updateEntityArrayInPlace } from '../utils/update-entity-in-place';
-
-export interface EntityStore {
-  companies: Company[];
-  contacts: Contact[];
-  statuses: Status[];
-  states: State[];
+export interface Contact {
+  id: number,
+  company?: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  status?: Status;
 }
 
-const initialState: EntityStore = {
-  companies: [],
-  contacts: [],
-  statuses: [],
-  states: [],
+export interface Company {
+  id: number,
+  description?: string;
+  employees?: Array<number>;
+  name: string;
+  state?: State;
+}
+
+// Entities received from an endpoint have a data shape incompatible with the
+// entity data in the Redux store.
+//
+// The main difference is in how references are represented. The data from
+// endpoints includes all referenced entities inline, (i.e. all references are
+// JS objects) whereas the Redux store format requires references to be simple
+// IDs.
+function contactToRedux(contact: BackendContact): Contact {
+  return {
+    ...contact,
+    company: contact.company?.id
+  };
+}
+
+export function contactToBackend(contact: Contact, resolveCompany: ((id: number) => Company | undefined) | undefined): BackendContact {
+  const company = !!resolveCompany && !!contact.company && resolveCompany(contact.company);
+  return {
+    ...contact,
+    company: !!company
+      ? companyToBackend(company, undefined)
+      : undefined
+  };
+}
+
+function companyToRedux(company: BackendCompany): Company {
+  return {
+    ...company,
+    employees: company.employees?.map(e => e.id)
+  };
+}
+
+export function companyToBackend(company: Company, resolveEmployee: ((id: number) => Contact | undefined) | undefined): BackendCompany {
+  return {
+    ...company,
+    employees: (!!resolveEmployee && company.employees)
+      ? company.employees
+          .map(employeeId => resolveEmployee(employeeId), undefined)
+          .filter(e => e !== undefined)
+          .map(e => contactToBackend(e!, undefined))
+      : undefined
+  };
+}
+
+const companiesAdapter = createEntityAdapter<Company>();
+const contactsAdapter = createEntityAdapter<Contact>();
+
+const initialState = {
+  companies: companiesAdapter.getInitialState(),
+  contacts: contactsAdapter.getInitialState(),
+  statuses: [] as Status[],
+  states: [] as State[],
 };
 
 // TODO: find a way to init the entity store once after each login
@@ -74,7 +120,7 @@ export const initStatuses = createAsyncThunk(
 
 export const saveContact = createAsyncThunk(
   'saveContact',
-  async (contact: Contact) => {
+  async (contact: BackendContact) => {
     await ContactEndpoint.saveContact(contact);
     return ContactEndpoint.find('');
   }
@@ -82,7 +128,7 @@ export const saveContact = createAsyncThunk(
 
 export const deleteContact = createAsyncThunk(
   'deleteContact',
-  async (contact: Contact) => {
+  async (contact: BackendContact) => {
     await ContactEndpoint.deleteContact(contact);
     return ContactEndpoint.find('');
   }
@@ -114,19 +160,78 @@ export const initStates = createAsyncThunk(
 
 export const saveCompany = createAsyncThunk(
   'saveCompany',
-  async (contact: Company) => {
-    await CompanyEndpoint.saveCompany(contact);
+  async (company: Company, thunkAPI) => {
+    // await new Promise(resolve => setTimeout(resolve, 5000));
+    const state = thunkAPI.getState() as typeof initialState;
+    await CompanyEndpoint.saveCompany(companyToBackend(company,
+      (id) => state.contacts.entities[id]));
     return CompanyEndpoint.findAllCompanies()
   }
 );
 
 export const deleteCompany = createAsyncThunk(
   'deleteCompany',
-  async (contact: Company) => {
-    await CompanyEndpoint.deleteCompany(contact);
+  async (company: Company, thunkAPI) => {
+    const state = thunkAPI.getState() as typeof initialState;
+    await CompanyEndpoint.deleteCompany(companyToBackend(company,
+      (id) => state.contacts.entities[id]));
     return CompanyEndpoint.findAllCompanies();
   }
 );
+
+function receiveContacts(state: typeof initialState, contacts: BackendContact[]) {
+  // Prepare a list of all (unique) companies referenced by
+  // the given list of contacts, in the MST snapshot format
+  // (i.e. all entity references are replaced by their IDs).
+  const companies = contacts.reduce(
+    (map, contact: BackendContact) => {
+      if (contact.company) {
+        map.set(contact.company.id, companyToRedux(contact.company));
+      }
+      return map;
+    },
+    new Map<BackendCompany['id'], Company>()
+  );
+
+  const companiesUpdate = [];
+  for (const [id, changes] of companies.entries()) {
+    companiesUpdate.push({ id, changes });
+  }
+  companiesAdapter.updateMany(state.companies, companiesUpdate);
+
+  // Convert the given list of contacts into the MST snapshot format
+  // (i.e. all entity references are replaced by their IDs).
+  const contactsSnap = contacts.map(contactToRedux);
+  contactsAdapter.setAll(state.contacts, contactsSnap);
+}
+
+function receiveCompanies(state: typeof initialState, companies: BackendCompany[]) {
+  // Prepare a list of all (unique) contacts referenced by
+  // the given list of companies, in the MST snapshot format
+  // (i.e. all entity references are replaced by their IDs).
+  const contacts = companies.reduce(
+    (map, company: BackendCompany) => {
+      if (company.employees) {
+        return company.employees.reduce((map, contact: BackendContact) => {
+          map.set(contact.id, contactToRedux(contact));
+          return map;
+        }, map);
+      }
+      return map;
+    },
+    new Map<BackendContact['id'], Contact>()
+  );
+  const contactsUpdate = [];
+  for (const [id, changes] of contacts.entries()) {
+    contactsUpdate.push({ id, changes });
+  }
+  contactsAdapter.updateMany(state.contacts, contactsUpdate);
+
+  // Convert the given list of companies into the MST snapshot format
+  // (i.e. all entity references are replaced by their IDs).
+  const companiesSnap = companies.map(companyToRedux);
+  companiesAdapter.setAll(state.companies, companiesSnap);
+}
 
 const entityStoreSlice = createSlice({
   name: 'entities',
@@ -135,66 +240,44 @@ const entityStoreSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(initContacts.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.contacts, action.payload);
+      receiveContacts(state, action.payload);
     });
     builder.addCase(initStatuses.fulfilled, (state, action) => {
       state.statuses = action.payload;
     });
     builder.addCase(saveContact.pending, (state, action) => {
-      // optimistic UI update
-      const contact = action.meta.arg;
-      const idx = state.contacts.findIndex(c => c.id === contact.id);
-      if (idx > -1) {
-        state.contacts[idx] = contact;
-      } else {
-        state.contacts.push(contact);
-      }
+      contactsAdapter.upsertOne(state.contacts, contactToRedux(action.meta.arg));
     });
     builder.addCase(saveContact.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.contacts, action.payload);
+      receiveContacts(state, action.payload);
     });
     builder.addCase(deleteContact.pending, (state, action) => {
-      // optimistic UI update
-      const contact = action.meta.arg;
-      const idx = state.contacts.findIndex(c => c.id === contact.id);
-      if (idx > -1) {
-        state.contacts.splice(idx, 1);
-      }
+      contactsAdapter.removeOne(state.contacts, action.meta.arg.id);
     });
     builder.addCase(deleteContact.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.contacts, action.payload);
+      receiveContacts(state, action.payload);
     });
     builder.addCase(initCompanies.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.companies, action.payload);
+      receiveCompanies(state, action.payload);
     });
     builder.addCase(initStates.fulfilled, (state, action) => {
       state.states = action.payload;
     });
     builder.addCase(saveCompany.pending, (state, action) => {
-      // optimistic UI update
-      const contact = action.meta.arg;
-      const idx = state.companies.findIndex(c => c.id === contact.id);
-      if (idx > -1) {
-        state.companies[idx] = contact;
-      } else {
-        state.companies.push(contact);
-      }
+      companiesAdapter.upsertOne(state.companies, action.meta.arg);
     });
     builder.addCase(saveCompany.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.companies, action.payload);
+      receiveCompanies(state, action.payload);
     });
     builder.addCase(deleteCompany.pending, (state, action) => {
-      // optimistic UI update
-      const contact = action.meta.arg;
-      const idx = state.companies.findIndex(c => c.id === contact.id);
-      if (idx > -1) {
-        state.companies.splice(idx, 1);
-      }
+      companiesAdapter.removeOne(state.companies, action.meta.arg.id);
     });
     builder.addCase(deleteCompany.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.companies, action.payload);
+      receiveCompanies(state, action.payload);
     });
   }
 });
 
 export const entitiesReducer = entityStoreSlice.reducer;
+export const { selectAll: selectAllContacts } = contactsAdapter.getSelectors();
+export const { selectAll: selectAllCompanies } = companiesAdapter.getSelectors();

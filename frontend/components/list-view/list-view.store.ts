@@ -1,7 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { contactToBackend } from "../../store/entities";
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 
-import type Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact'
+import type { Contact } from '../../store/entities';
 import type { RootState } from '../../store';
 
 export interface ContactsViewState {
@@ -23,19 +24,24 @@ export const filteredContactsSelector = createSelector(
   (state: ContactsViewRootState) => state.contactList.filter,
   (contacts, filter) => {
     const lowercaseFilter = filter.toLowerCase();
-    return contacts.filter(c =>
-      c.firstName.toLowerCase().includes(lowercaseFilter)
-      || c.lastName.toLowerCase().includes(lowercaseFilter));
+    return contacts.ids.filter(id =>
+      contacts.entities[id]?.firstName.toLowerCase().includes(lowercaseFilter)
+      || contacts.entities[id]?.lastName.toLowerCase().includes(lowercaseFilter))
+      .map(id => contacts.entities[id]!);
   }
 );
 
 export const selectedContactSelector = createSelector(
   (state: ContactsViewRootState) => state.entities.contacts,
+  (state: ContactsViewRootState) => state.entities.companies,
   (state: ContactsViewRootState) => state.contactList.selectedContactId,
-  (contacts, selectedContactId) => {
+  (contacts, companies, selectedContactId) => {
+    if (selectedContactId === undefined) {
+      return undefined;
+    }
     return selectedContactId === 0
       ? ContactModel.createEmptyValue()
-      : contacts.find(c => c.id === selectedContactId);
+      : contactToBackend(contacts.entities[selectedContactId]!, (id) => companies.entities[id]);
   }
 );
 

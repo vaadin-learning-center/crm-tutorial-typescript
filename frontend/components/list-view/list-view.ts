@@ -6,7 +6,8 @@ import {
   initContacts,
   initStatuses,
   deleteContact,
-  saveContact
+  saveContact,
+  selectAllCompanies,
 } from '../../store/entities';
 import {
   addNewContact,
@@ -24,8 +25,8 @@ import '../contact-form/contact-form';
 import type { ComboBoxDataProvider } from '@vaadin/vaadin-combo-box';
 import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
 
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
-import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import type { Company, Contact } from '../../store/entities';
+import type BackendContact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
@@ -43,7 +44,7 @@ export class ListView extends connect(store)(LitElement) {
   private contacts: Contact[] = [];
 
   @property({ type: Object })
-  private selectedContact?: Contact = undefined;
+  private selectedContact?: BackendContact = undefined;
 
   @property({ type: Array })
   private companies: Company[] = [];
@@ -54,7 +55,7 @@ export class ListView extends connect(store)(LitElement) {
   stateChanged(state: ContactsViewRootState) {
     this.contacts = filteredContactsSelector(state);
     this.selectedContact = selectedContactSelector(state);
-    this.companies = state.entities.companies;
+    this.companies = selectAllCompanies(state.entities.companies);
     this.statuses = state.entities.statuses;
   }
 
@@ -148,8 +149,8 @@ export class ListView extends connect(store)(LitElement) {
             .contact=${this.selectedContact}
             .companies=${this.companyCbDataProvider}
             .statuses=${this.statuses}
-            .onSubmit="${(contact: Contact) => this.saveContact(contact)}"
-            .onDelete="${(contact: Contact) => this.deleteContact(contact)}"
+            .onSubmit="${(contact: BackendContact) => this.saveContact(contact)}"
+            .onDelete="${(contact: BackendContact) => this.deleteContact(contact)}"
             .onCancel="${() => store.dispatch(clearSelection())}"
           ></contact-form>
         </div>
@@ -157,12 +158,12 @@ export class ListView extends connect(store)(LitElement) {
     `;
   }
 
-  private saveContact(contact: Contact) {
+  private saveContact(contact: BackendContact) {
     store.dispatch(saveContact(contact));
     store.dispatch(clearSelection());
   }
 
-  private deleteContact(contact: Contact) {
+  private deleteContact(contact: BackendContact) {
     store.dispatch(deleteContact(contact));
     store.dispatch(clearSelection());
   }
