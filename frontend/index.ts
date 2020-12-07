@@ -7,7 +7,7 @@ import { logout } from '@vaadin/flow-frontend';
 import './utils/lumo';
 
 const isUserLoggedIn = function() {
-  return !!sessionStorage.getItem('loggedIn');
+  return !!localStorage.getItem('loggedIn');
 }
 
 const routes = [
@@ -31,7 +31,7 @@ const routes = [
      path: '/logout',
      action: async (_: Context, commands: Commands) => {
        await logout();
-       sessionStorage.setItem('loggedIn', String(false));
+       localStorage.setItem('loggedIn', String(false));
        return commands.redirect('/');
      }
    },
