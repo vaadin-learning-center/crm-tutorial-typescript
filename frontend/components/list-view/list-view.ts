@@ -21,6 +21,7 @@ import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import '../contact-form/contact-form';
+import type { ComboBoxDataProvider } from '@vaadin/vaadin-combo-box';
 import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
 
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
@@ -55,6 +56,20 @@ export class ListView extends connect(store)(LitElement) {
     this.selectedContact = selectedContactSelector(state);
     this.companies = state.entities.companies;
     this.statuses = state.entities.statuses;
+  }
+
+  private companyCbDataProvider: ComboBoxDataProvider = (params, callback) => {
+    console.log(`[combo-box] fetching a page of companies: params = `, params);
+    const filtered = this.companies
+      .filter(c => {
+        const filter = params.filter.toLowerCase();
+        return !filter || c.name.toLowerCase().includes(filter);
+      });
+
+    const slice = filtered.slice(params.page * params.pageSize,
+      params.page * params.pageSize + params.pageSize);
+
+    callback(slice, filtered.length);
   }
 
   static styles = [Lumo, styles];
@@ -131,7 +146,7 @@ export class ListView extends connect(store)(LitElement) {
           <contact-form
             class="contact-form"
             .contact=${this.selectedContact}
-            .companies=${this.companies}
+            .companies=${this.companyCbDataProvider}
             .statuses=${this.statuses}
             .onSubmit="${(contact: Contact) => this.saveContact(contact)}"
             .onDelete="${(contact: Contact) => this.deleteContact(contact)}"

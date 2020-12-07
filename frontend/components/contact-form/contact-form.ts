@@ -3,8 +3,8 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-text-field/vaadin-email-field';
 import '@vaadin/vaadin-combo-box';
+import type { ComboBoxDataProvider } from "@vaadin/vaadin-combo-box";
 import '@vaadin/vaadin-button';
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
@@ -36,8 +36,8 @@ export class ContactForm extends LitElement {
   @property({ type: Function })
   onCancel = (_: Contact) => Promise.resolve();
 
-  @property({ type: Array })
-  companies: Company[] = [];
+  @property({ type: Object })
+  companies: ComboBoxDataProvider = () => { console.log('no-op combo-box data provider'); };
 
   @property({ type: Array })
   statuses: Status[] = [];
@@ -70,7 +70,7 @@ export class ContactForm extends LitElement {
       <vaadin-combo-box
         label="Company"
         item-label-path="name"
-        .items=${this.companies}
+        .dataProvider=${this.companies}
         ...="${field(this.binder.model.company)}"
       ></vaadin-combo-box>
       <vaadin-combo-box
