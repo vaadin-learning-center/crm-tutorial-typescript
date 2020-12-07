@@ -19,6 +19,7 @@ export class MainLayout extends LitElement {
         <div slot="drawer" class="drawer">
           <ul>
             <li><a href="/">List</a></li>
+            <li><a href="/companies">Companies</a></li>
             <li><a href="/dashboard">Dashboard</a></li>
           </ul>
         </div>

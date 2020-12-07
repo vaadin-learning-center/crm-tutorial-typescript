@@ -2,13 +2,26 @@
 export function updateEntityInPlace<Entity extends {id?: number}>(current: Entity, next: Entity) {
   // assume current and next have the same properties
   Object.getOwnPropertyNames(current).forEach(prop => {
+    if (!next.hasOwnProperty(prop)) {
+      // This would be the case when the data in the store is
+      // denormalized and a 'Company' instance may have different
+      // properties present depending on how it was fetched:
+      // through ContactsEndpoint (excludes company.employees),
+      // or through CompanyEndpoint (includes company.employees).
+      // Editing an employee would assign it's `company` property
+      // from one that does not have `employees` to the one that
+      // has, and later when the contacts list is re-fetched from
+      // the backend the new contact would not have
+      // `company.employees` anymore.
+      return;
+    }
     if (Array.isArray((current as any)[prop])) {
       // assume any array is an entity array
       // assume the arrays are not self-recursive
       updateEntityArrayInPlace(
         (current as any)[prop] as any as Array<{id: number}>,
         (next as any)[prop] as any as Array<{id: number}>);
-    } else if (typeof (current as any)[prop] === 'object') {
+    } else if (typeof (current as any)[prop] === 'object' && (current as any)[prop] !== null) {
       // assume any object is an entity
       // assume the objects are not self-recursive
       updateEntityInPlace(

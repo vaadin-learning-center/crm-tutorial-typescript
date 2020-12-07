@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import * as API from '../generated/ServiceEndpoint';
+import * as ContactEndpoint from '../generated/ServiceEndpoint';
+import * as CompanyEndpoint from '../generated/CompanyEndpoint';
 
 import type Company from '../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import type Contact from '../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
 import type Status from '../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
+import type State from '../generated/com/vaadin/tutorial/crm/backend/entity/Company/State';
 import type { RootState } from './index';
 
 // Use a custom helper to avoid updating the contacts / companies state properties
@@ -16,32 +18,21 @@ import type { RootState } from './index';
 // store.
 import { updateEntityArrayInPlace } from '../utils/update-entity-in-place';
 
-export interface ContactStore {
+export interface EntityStore {
   companies: Company[];
   contacts: Contact[];
   statuses: Status[];
+  states: State[];
 }
 
-const initialState: ContactStore = {
+const initialState: EntityStore = {
   companies: [],
   contacts: [],
   statuses: [],
+  states: [],
 };
 
-export const initCompanies = createAsyncThunk(
-  'initCompanies',
-  async (_: any, thunkAPI) => {
-    const store = thunkAPI.getState() as RootState;
-    if (store.auth.isLoggedIn) {
-      return await API.findAllCompanies();
-    } else {
-      return [];
-    }
-  }
-);
-
-// TODO: find a way to init the contacts store once after each login
-// NOTE: same for the list of companies and contact statuses
+// TODO: find a way to init the entity store once after each login
 //
 // Ideally, this action should fetch the backend data only once after each
 // login:
@@ -62,7 +53,7 @@ export const initContacts = createAsyncThunk(
   async (_: any, thunkAPI) => {
     const store = thunkAPI.getState() as RootState;
     if (store.auth.isLoggedIn) {
-      return await API.find('');
+      return await ContactEndpoint.find('');
     } else {
       return [];
     }
@@ -74,7 +65,7 @@ export const initStatuses = createAsyncThunk(
   async (_: any, thunkAPI) => {
     const store = thunkAPI.getState() as RootState;
     if (store.auth.isLoggedIn) {
-      return await API.getContactStatuses();
+      return await ContactEndpoint.getContactStatuses();
     } else {
       return [];
     }
@@ -84,28 +75,65 @@ export const initStatuses = createAsyncThunk(
 export const saveContact = createAsyncThunk(
   'saveContact',
   async (contact: Contact) => {
-    await API.saveContact(contact);
-    return API.find('');
+    await ContactEndpoint.saveContact(contact);
+    return ContactEndpoint.find('');
   }
 );
 
 export const deleteContact = createAsyncThunk(
   'deleteContact',
   async (contact: Contact) => {
-    await API.deleteContact(contact);
-    return API.find('');
+    await ContactEndpoint.deleteContact(contact);
+    return ContactEndpoint.find('');
   }
 );
 
-const contactStoreSlice = createSlice({
-  name: 'contacts',
+export const initCompanies = createAsyncThunk(
+  'initCompanies',
+  async (_: any, thunkAPI) => {
+    const store = thunkAPI.getState() as RootState;
+    if (store.auth.isLoggedIn) {
+      return await CompanyEndpoint.findAllCompanies();
+    } else {
+      return [];
+    }
+  }
+);
+
+export const initStates = createAsyncThunk(
+  'initStates',
+  async (_: any, thunkAPI) => {
+    const store = thunkAPI.getState() as RootState;
+    if (store.auth.isLoggedIn) {
+      return await CompanyEndpoint.getCompanyStates();
+    } else {
+      return [];
+    }
+  }
+);
+
+export const saveCompany = createAsyncThunk(
+  'saveCompany',
+  async (contact: Company) => {
+    await CompanyEndpoint.saveCompany(contact);
+    return CompanyEndpoint.findAllCompanies()
+  }
+);
+
+export const deleteCompany = createAsyncThunk(
+  'deleteCompany',
+  async (contact: Company) => {
+    await CompanyEndpoint.deleteCompany(contact);
+    return CompanyEndpoint.findAllCompanies();
+  }
+);
+
+const entityStoreSlice = createSlice({
+  name: 'entities',
   initialState,
   reducers: {
   },
   extraReducers: builder => {
-    builder.addCase(initCompanies.fulfilled, (state, action) => {
-      updateEntityArrayInPlace(state.companies, action.payload);
-    });
     builder.addCase(initContacts.fulfilled, (state, action) => {
       updateEntityArrayInPlace(state.contacts, action.payload);
     });
@@ -136,7 +164,37 @@ const contactStoreSlice = createSlice({
     builder.addCase(deleteContact.fulfilled, (state, action) => {
       updateEntityArrayInPlace(state.contacts, action.payload);
     });
+    builder.addCase(initCompanies.fulfilled, (state, action) => {
+      updateEntityArrayInPlace(state.companies, action.payload);
+    });
+    builder.addCase(initStates.fulfilled, (state, action) => {
+      state.states = action.payload;
+    });
+    builder.addCase(saveCompany.pending, (state, action) => {
+      // optimistic UI update
+      const contact = action.meta.arg;
+      const idx = state.companies.findIndex(c => c.id === contact.id);
+      if (idx > -1) {
+        state.companies[idx] = contact;
+      } else {
+        state.companies.push(contact);
+      }
+    });
+    builder.addCase(saveCompany.fulfilled, (state, action) => {
+      updateEntityArrayInPlace(state.companies, action.payload);
+    });
+    builder.addCase(deleteCompany.pending, (state, action) => {
+      // optimistic UI update
+      const contact = action.meta.arg;
+      const idx = state.companies.findIndex(c => c.id === contact.id);
+      if (idx > -1) {
+        state.companies.splice(idx, 1);
+      }
+    });
+    builder.addCase(deleteCompany.fulfilled, (state, action) => {
+      updateEntityArrayInPlace(state.companies, action.payload);
+    });
   }
 });
 
-export const contactsReducer = contactStoreSlice.reducer;
+export const entitiesReducer = entityStoreSlice.reducer;

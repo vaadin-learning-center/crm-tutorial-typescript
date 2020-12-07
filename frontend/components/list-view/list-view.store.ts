@@ -19,7 +19,7 @@ const initialState: ContactsViewState = {
 };
 
 export const filteredContactsSelector = createSelector(
-  (state: ContactsViewRootState) => state.contacts.contacts,
+  (state: ContactsViewRootState) => state.entities.contacts,
   (state: ContactsViewRootState) => state.contactList.filter,
   (contacts, filter) => {
     const lowercaseFilter = filter.toLowerCase();
@@ -30,7 +30,7 @@ export const filteredContactsSelector = createSelector(
 );
 
 export const selectedContactSelector = createSelector(
-  (state: ContactsViewRootState) => state.contacts.contacts,
+  (state: ContactsViewRootState) => state.entities.contacts,
   (state: ContactsViewRootState) => state.contactList.selectedContactId,
   (contacts, selectedContactId) => {
     return selectedContactId === 0

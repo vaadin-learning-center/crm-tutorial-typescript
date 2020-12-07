@@ -51,6 +51,15 @@ const routes = [
         component: 'list-view',
       },
       {
+        path: '/companies',
+        component: 'companies-view',
+        action: () => {
+          import(
+            /* webpackChunkName: "companies" */ './components/companies-view/companies-view'
+            );
+        },
+      },
+      {
         path: '/dashboard',
         component: 'dashboard-view',
         action: () => {

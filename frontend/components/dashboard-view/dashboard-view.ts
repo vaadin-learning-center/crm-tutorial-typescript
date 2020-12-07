@@ -2,7 +2,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import { connect } from 'pwa-helpers';
 
 import '@vaadin/vaadin-charts';
-import { initContacts } from '../../store/contacts';
+import { initContacts } from '../../store/entities';
 import { chartValuesSelector } from './dashboard-view.state';
 import { Lumo } from '../../utils/lumo';
 import styles from './dashboard-view.css';
@@ -20,7 +20,7 @@ export class DashboardView extends connect(store)(LitElement) {
   private chartValues: PieChartSeriesValues = [];
 
   stateChanged(state: RootState) {
-    this.numberOfContacts = state.contacts.contacts.length;
+    this.numberOfContacts = state.entities.contacts.length;
     this.chartValues = chartValuesSelector(state);
   }
 

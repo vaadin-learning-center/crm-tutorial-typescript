@@ -5,7 +5,7 @@ export type PieChartSeriesValue = [ string, number ];
 export type PieChartSeriesValues = PieChartSeriesValue[];
 
 export const chartValuesSelector = createSelector(
-  (state: RootState) => state.contacts.contacts,
+  (state: RootState) => state.entities.contacts,
   contacts => {
     return Object.entries(
       contacts.map(contact => contact.company?.name || 'no company')

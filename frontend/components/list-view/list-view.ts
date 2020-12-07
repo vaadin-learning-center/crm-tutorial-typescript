@@ -7,7 +7,7 @@ import {
   initStatuses,
   deleteContact,
   saveContact
-} from '../../store/contacts';
+} from '../../store/entities';
 import {
   addNewContact,
   clearSelection,
@@ -53,8 +53,8 @@ export class ListView extends connect(store)(LitElement) {
   stateChanged(state: ContactsViewRootState) {
     this.contacts = filteredContactsSelector(state);
     this.selectedContact = selectedContactSelector(state);
-    this.companies = state.contacts.companies;
-    this.statuses = state.contacts.statuses;
+    this.companies = state.entities.companies;
+    this.statuses = state.entities.statuses;
   }
 
   static styles = [Lumo, styles];
