@@ -5,6 +5,11 @@ import './components/list-view/list-view';
 import { logout } from '@vaadin/flow-frontend';
 
 import './utils/lumo';
+import client from './generated/connect-client.default';
+import { invalidSessionMiddleware } from './utils/invalid-session-middleware';
+
+// Show a login dialog in a popup when the user session expires
+client.middlewares.push(invalidSessionMiddleware);
 
 const isUserLoggedIn = function() {
   return localStorage.getItem('loggedIn') === 'true';
