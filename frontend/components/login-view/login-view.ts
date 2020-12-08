@@ -4,7 +4,7 @@ import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login/@types/interfaces';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
-import { login } from '@vaadin/flow-frontend';
+import { login } from '../../auth';
 import { Lumo } from '../../utils/lumo';
 import styles from './login-view.css';
 
@@ -29,7 +29,6 @@ export class LoginView extends LitElement implements AfterEnterObserver {
   constructor(){
     super();
     this.onSuccess = () => {
-      localStorage.setItem('loggedIn', String(true));
       Router.go(this.returnUrl);
     };
   }
