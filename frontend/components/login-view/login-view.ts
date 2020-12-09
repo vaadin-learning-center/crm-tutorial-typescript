@@ -3,7 +3,8 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login/@types/interfaces';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
-import { LoginResult, login } from '@vaadin/flow-frontend';
+import type { LoginResult } from '@vaadin/flow-frontend';
+import { login } from '../../auth';
 import { Lumo } from '../../utils/lumo';
 import styles from './login-view.css';
 
@@ -13,9 +14,6 @@ export class LoginView extends LitElement implements AfterEnterObserver {
   @property({type: Boolean})
   private error = false;
 
-  @property({type: Boolean})
-  private open = true;
-
   @property()
   private errorTitle = '';
 
@@ -24,32 +22,38 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   private returnUrl = '/';
 
-  private onSuccess: (result:LoginResult) => void;
+  private onSuccess: (result: LoginResult) => void;
 
   static styles = [Lumo, styles];
 
   constructor(){
     super();
     this.onSuccess = () => {
-      localStorage.setItem('loggedIn', String(true));
       Router.go(this.returnUrl);
     };
   }
 
-  async showOverlay(): Promise<LoginResult>{
-    return new Promise(resolve => {
-      this.onSuccess = (result: LoginResult) => {
-        this.remove();
+  private static popupResult?: Promise<LoginResult>;
+  static async openAsPopup(): Promise<LoginResult> {
+    if (this.popupResult) {
+      return this.popupResult;
+    }
+
+    const popup = new this();
+    return this.popupResult = new Promise(resolve => {
+      popup.onSuccess = result => {
+        this.popupResult = undefined;
+        popup.remove();
         resolve(result);
       }
-      document.body.append(this);
+      document.body.append(popup);
     });
   }
 
   render() {
     return html`
       <vaadin-login-overlay
-        ?opened="${this.open}" 
+        opened 
         .error=${this.error}
         .i18n="${this.i18n}"
         @login="${this.login}">    

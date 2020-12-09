@@ -12,7 +12,7 @@
     "@vaadin/vaadin-grid": "5.7.7",
     "@vaadin/vaadin-split-layout": "4.3.0",
     "@vaadin/vaadin-combo-box": "5.4.6",
-    "@vaadin/vaadin-core-shrinkwrap": "18.0.0-rc2",
+    "@vaadin/vaadin-core-shrinkwrap": "18.0.1",
     "@vaadin/vaadin-upload": "4.4.1",
     "@vaadin/vaadin-dialog": "2.5.2",
     "@vaadin/vaadin-select": "2.4.0",
@@ -83,7 +83,7 @@
       "@vaadin/vaadin-grid": "5.7.7",
       "@vaadin/vaadin-split-layout": "4.3.0",
       "@vaadin/vaadin-combo-box": "5.4.6",
-      "@vaadin/vaadin-core-shrinkwrap": "18.0.0-rc2",
+      "@vaadin/vaadin-core-shrinkwrap": "18.0.1",
       "@vaadin/vaadin-upload": "4.4.1",
       "@vaadin/vaadin-dialog": "2.5.2",
       "@vaadin/vaadin-select": "2.4.0",
@@ -142,6 +142,6 @@
       "webpack-manifest-plugin": "2.2.0",
       "workbox-webpack-plugin": "5.1.4"
     },
-    "hash": "4c94065fe7b6f360a56ca42c9eb4b65bdc46549d243a76a47f16a7773d72f3a9"
+    "hash": "5d84f3f8abb70d9fca55c05fd11db1968a43fc47ee3af77a0bd72c3ecb692f6f"
   }
 }

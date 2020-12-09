@@ -2,13 +2,14 @@ import { Commands, Context, Router } from '@vaadin/router';
 
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
-import { logout } from '@vaadin/flow-frontend';
+import { isLoggedIn, logout } from './auth';
 
 import './utils/lumo';
+import client from './generated/connect-client.default';
+import { invalidSessionMiddleware } from './utils/invalid-session-middleware';
 
-const isUserLoggedIn = function() {
-  return localStorage.getItem('loggedIn') === 'true';
-}
+// Show a login dialog in a popup when the user session expires
+client.middlewares.push(invalidSessionMiddleware);
 
 const routes = [
   {
@@ -31,14 +32,13 @@ const routes = [
      path: '/logout',
      action: async (_: Context, commands: Commands) => {
        await logout();
-       localStorage.setItem('loggedIn', String(false));
        return commands.redirect('/');
      }
    },
   {
     path: '/',
     action: async (_: Router.Context, commands: Router.Commands) => {
-      if (!isUserLoggedIn()) {
+      if (!isLoggedIn()) {
         return commands.redirect('/login');
       }
       return undefined;
