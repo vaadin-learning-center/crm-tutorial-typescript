@@ -12,6 +12,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    // Vaadin already handles CSRF.
+    http.csrf().ignoringAntMatchers("/login", "/connect/**");
     // Vaadin renders a client-side login page at "/login" (see the routes
     // config in index.ts).
     //
@@ -40,9 +42,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     // to configure it separately. However, it's important that it's configured
     // because this app assumes the default `/logout` HTTP GET handler.
     // http.logout();
-
-    // Vaadin already handles CSRF.
-    http.csrf().disable();
   }
 
   @Override

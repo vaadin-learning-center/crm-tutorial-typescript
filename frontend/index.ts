@@ -37,7 +37,7 @@ const routes = [
    },
   {
     path: '/',
-    action: async (_: Router.Context, commands: Router.Commands) => {
+    action: (_: Router.Context, commands: Router.Commands) => {
       if (!isUserLoggedIn()) {
         return commands.redirect('/login');
       }
