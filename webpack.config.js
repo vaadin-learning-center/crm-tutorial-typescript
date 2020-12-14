@@ -8,6 +8,22 @@
 const merge = require('webpack-merge');
 const flowDefaults = require('./webpack.generated.js');
 
+// Begin workaround: needed until Flow 6.0.offline-SNAPSHOT gets this fix:
+// https://github.com/vaadin/flow/pull/9550
+const cssLoaders = flowDefaults.module.rules.find(r => r.test && r.test.toString() == '/\\.css$/i');
+const containsLitCssLoader = cssLoaders.use.find(o => o.loader === 'lit-css-loader') !== undefined;
+if (!containsLitCssLoader) {
+  cssLoaders.use.unshift(
+    {
+      loader: "lit-css-loader"
+    },
+    {
+      loader: "extract-loader"
+    }
+  );
+}
+// End workaround
+
 /**
  * To change the webpack config, add a new configuration object in
  * the merge arguments below:

@@ -3,19 +3,19 @@ import {Router} from '@vaadin/router';
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
 import {isUserLoggedIn} from './generated/SecurityEndpoint';
-import {logout} from '@vaadin/flow-frontend/Connect';
+import {logout} from '@vaadin/flow-frontend';
 
 import './utils/lumo';
 
 import client from './generated/connect-client.default';
-import {deferredCallCallback} from './utils/deferred-call-callback'
+import {deferredCallHandler} from './utils/deferred-call-handler'
 import {invalidSessionMiddleware} from './utils/invalid-session-middleware';
 
 // Setup the client for endpoint calls
-client.onDeferredCall = deferredCallCallback;
+client.deferredCallHandler = deferredCallHandler;
 client.middlewares.push(invalidSessionMiddleware);
 if (navigator.onLine) {
-  client.processDeferredCalls();
+  client.submitDeferredCalls();
 }
 
 const routes = [
