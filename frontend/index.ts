@@ -7,9 +7,13 @@ import { isLoggedIn, logout } from './auth';
 import './utils/lumo';
 import client from './generated/connect-client.default';
 import { invalidSessionMiddleware } from './utils/invalid-session-middleware';
+import { addAuthHeaderMiddleware } from './utils/add-auth-header-middleware';
 
 // Show a login dialog in a popup when the user session expires
-client.middlewares.push(invalidSessionMiddleware);
+client.middlewares.push(
+  invalidSessionMiddleware,
+  addAuthHeaderMiddleware
+);
 
 const routes = [
   {
@@ -19,15 +23,10 @@ const routes = [
       await import (/* webpackChunkName: "login" */ './components/login-view/login-view');
     },
   },
-  // Logging out is handled by Spring Security: it handles HTTP GET requests to
+
+  // First log out on the client-side, when destroy the server-side security context.
+  // Server-side logging out is handled by Spring Security: it handles HTTP GET requests to
   // /logout and redirects to /login?logout in response.
-  // For that a "Logout" button should be an regular <a> tag (see main-layout.ts):
-  //    `<a href="/logout" router-ignore>Log out</a>`
-  //
-  // In order to implement logging out on the client-side (e.g. in order to avoid
-  // a full page reload), it would require a `/logout` route like the one below.
-  // In that case a "Logout" button should an in-app link like
-  //    `<a href="/logout">Log out</a>`
    {
      path: '/logout',
      action: async (_: Context, commands: Commands) => {
@@ -38,7 +37,7 @@ const routes = [
   {
     path: '/',
     action: async (_: Router.Context, commands: Router.Commands) => {
-      if (!isLoggedIn()) {
+      if (!await isLoggedIn()) {
         return commands.redirect('/login');
       }
       return undefined;

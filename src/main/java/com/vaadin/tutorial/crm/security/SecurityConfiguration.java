@@ -1,7 +1,6 @@
 package com.vaadin.tutorial.crm.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,27 +16,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     // Vaadin renders a client-side login page at "/login" (see the routes
     // config in index.ts).
-    //
-    // This configures Spring Security to
-    //     (i) listen for form login HTTP POST requests on "/login"
-    //         This is actually used by the client-side login form.
-    //         In this app the login form is built assuming the Spring Security
-    //         defaults: parameter names, form data submission, handler URL,
-    //         success and failure responses. If any of that changes (either
-    //         in the Spring Security config here, or in the client-side login
-    //         form, the other part should be updated accordingly.
-    //    (ii) ignore HTTP GET requests to "/login"
-    //         (i.e. do not render the default Spring Security login form)
-    //         The `/login` HTTP GET is handled in the same way as any
-    //         other HTTP GET: the app shell is returned and routing happens
-    //         on the client side.
-    //   (iii) redirect unauthenticated HTTP GET requests to "/login"
-    //         This is used only if Spring Security is actually configured
-    //         to require authentication for some HTTP requests.
-    //         In this app this may be irrelevant because it's OK to allow
-    //         _all_ HTTP GET requests and let the client-side redirect to
-    //         /login when necessary.
-    http.formLogin().loginPage("/login");
+
+    // Okta automatically configures the JWT resource server
+    // It's unnecessary to explicitly add it here unless there is a need for custom config
+    //    http.oauth2ResourceServer()
+    //            .jwt();
+
+    // DONE: disable OAuth2AuthorizationRequestRedirectFilter and OAuth2LoginAuthenticationFilter
+    // Done by removing the `okta.oauth2.clientId property from application.properties.
+    // See  com.okta.spring.boot.oauth.OktaOAuth2Configurer#init()
+    // See  org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2ClientConfigurer
+
+    // DONE: disable Spring DefaultLoginPageGeneratingFilter
+    // DONE: disable Spring DefaultLogoutPageGeneratingFilter
+    // Done by removing the `okta.oauth2.clientId property from application.properties
+    // and then not using any of
+    //  - http.formLogin()
+    //  - http.oauth2Client()
+    //  - http.openidLogin()
+    //  - http.saml2Login()
+    // See org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter#isEnabled()
 
     // Spring Security supports logout requests by default, so there is no need
     // to configure it separately. However, it's important that it's configured
@@ -45,9 +43,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     // http.logout();
   }
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    // Configure users and roles in memory
-    auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("USER");
-  }
+//  Not needed because the user database is in Okta
+//  @Override
+//  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//    // Configure users and roles in memory
+//    auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("USER");
+//  }
 }

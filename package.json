@@ -5,6 +5,7 @@
     "@vaadin/router": "1.7.2",
     "@vaadin/vaadin-charts": "7.0.0-alpha3",
     "lit-element": "2.3.1",
+    "@okta/okta-signin-widget": "4.3.2",
     "@polymer/polymer": "3.2.0",
     "@vaadin/flow-frontend": "./target/flow-frontend",
     "@vaadin/form": "./target/flow-frontend/form",
@@ -150,6 +151,6 @@
       "loader-utils": "1.4.0",
       "construct-style-sheets-polyfill": "2.4.2"
     },
-    "hash": "2963f9300eb8211c33d3f3fb9663668e179eb83fba88bfe0a3e0a54c529d24ed"
+    "hash": "1c5d72eee3a01374bf35f241497af6186192f6a43a0229eafd8bf7f58c1f6b5a"
   }
 }
