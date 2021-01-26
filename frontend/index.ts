@@ -9,6 +9,11 @@ import client from './generated/connect-client.default';
 import { invalidSessionMiddleware } from './utils/invalid-session-middleware';
 import { addAuthHeaderMiddleware } from './utils/add-auth-header-middleware';
 
+import { Flow } from '@vaadin/flow-frontend';
+const { serverSideRoutes } = new Flow({
+  imports: () => import(/* webpackChunkName: "flow-imports" */ '../target/frontend/generated-flow-imports')
+});
+
 // Show a login dialog in a popup when the user session expires
 client.middlewares.push(
   invalidSessionMiddleware,
@@ -71,6 +76,7 @@ const routes = [
           );
         },
       },
+      ...serverSideRoutes
     ],
   },
 ];

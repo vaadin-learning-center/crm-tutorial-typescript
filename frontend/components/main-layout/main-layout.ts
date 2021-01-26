@@ -19,7 +19,8 @@ export class MainLayout extends LitElement {
         <div slot="drawer" class="drawer">
           <ul>
             <li><a href="/">List</a></li>
-            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/dashboard">Dashboard (Fusion)</a></li>
+            <li><a href="/auth-info-flow">Auth info (Flow)</a></li>
           </ul>
         </div>
         <slot></slot>

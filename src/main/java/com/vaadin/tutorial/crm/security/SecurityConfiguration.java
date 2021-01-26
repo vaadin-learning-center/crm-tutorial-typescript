@@ -12,7 +12,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // ignore csrf for login processing url and Vaadin endpoint requests
-    http.csrf().ignoringAntMatchers("/login", "/connect/**");
+    http.csrf().ignoringAntMatchers("/login", "/connect/**")
+            // Allow Flow requests
+            .ignoringRequestMatchers(SecurityUtils::isFrameworkInternalRequest);
 
     // Vaadin renders a client-side login page at "/login" (see the routes
     // config in index.ts).
