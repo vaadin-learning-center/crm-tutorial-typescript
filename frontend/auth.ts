@@ -1,44 +1,82 @@
 import { logout as logoutImpl } from '@vaadin/flow-frontend';
-
-// @ts-ignore
-import OktaSignIn from '@okta/okta-signin-widget';
-// TODO: 275kB min-zipped just to render a login widget?
+import type { LoginResult } from '@vaadin/flow-frontend';
+import { AccessToken, OktaAuth } from '@okta/okta-auth-js';
 
 // In the Okta admin panel set the following:
 //  - Application type: Single Page App (SPA)
 //  - Allowed grant types: Authorization Code
 //  - Login redirect URIs: http://localhost:8080/login
-
-export const oktaSignIn = new OktaSignIn({
-  baseUrl: 'https://dev-692531.okta.com', // use your own
+const authClient = new OktaAuth({
+  issuer: 'https://dev-692531.okta.com/oauth2/default', // use your own
   clientId: '0oa1zku3mqYvm7pOt4x7', // use your own
-  authParams: {
-    issuer: "https://dev-692531.okta.com/oauth2/default",
-    responseType: ['token', 'id_token'],
-    display: 'page'
-  }
+  redirectUri: 'http://localhost:8080/callback',
+  pkce: true,
 });
 
-export async function getUserInfo() {
+export async function login(username: string, password: string) {
+  const result: LoginResult = {
+    error: false
+  };
+
   try {
-    return await oktaSignIn.authClient.token.getUserInfo();
-  } catch (error) {
-    console.warn(`oktaSignIn.authClient.token.getUserInfo() errored: ${error}`);
-    return null;
+    const transaction = await authClient.signIn({
+      username,
+      password,
+    });
+    if (transaction.status === 'SUCCESS') {
+      authClient.token.getWithRedirect({
+        sessionToken: transaction.sessionToken,
+        responseType: 'id_token',
+      });
+    }
   }
+  catch (e) {
+    result.error = true;
+    result.errorTitle = 'Cannot login with Okta';
+    result.errorMessage = `${e.errorSummary} (code ${e.errorCode})`;
+  }
+
+  return result;
+}
+
+export async function handleAuthCallback() {
+  if (authClient.token.isLoginRedirect()) {
+    try {
+      const tokenResponse = await authClient.token.parseFromUrl();
+      const { accessToken, idToken } = tokenResponse.tokens;
+      if (!accessToken || !idToken) return false;
+
+      authClient.tokenManager.add('accessToken', accessToken);
+      authClient.tokenManager.add('idToken', idToken);
+      return true;
+    } catch (err) {
+      console.warn(`authClient.token.parseFromUrl() errored: ${err}`);
+      return false;
+    }
+  }
+  return false;
 }
 
 export async function logout() {
   return Promise.all([
-    oktaSignIn.authClient.signOut(),
+    authClient.signOut(),
     logoutImpl()
   ]);
 }
 
 export async function isLoggedIn() {
-  return !!await getUserInfo();
+  // Checks if there is a current accessToken in the TokenManger.
+  return !!(await getAccessToken());
 }
 
-export function setSessionExpired() {
-  oktaSignIn.authClient.closeSession();
+export async function getAccessToken() {
+  const token = (await authClient.tokenManager.get(
+    'accessToken'
+  )) as AccessToken;
+
+  return token;
+}
+
+export async function setSessionExpired() {
+  return authClient.closeSession();
 }
