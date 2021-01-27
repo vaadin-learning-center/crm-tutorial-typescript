@@ -16,6 +16,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             // Allow Flow requests
             .ignoringRequestMatchers(SecurityUtils::isFrameworkInternalRequest);
 
+    // Restrict access to the REST API
+    http.authorizeRequests()
+            .antMatchers("/api/**").authenticated();
+
     // Vaadin renders a client-side login page at "/login" (see the routes
     // config in index.ts).
 
