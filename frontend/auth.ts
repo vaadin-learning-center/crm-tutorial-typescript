@@ -1,6 +1,7 @@
 import { logout as logoutImpl } from '@vaadin/flow-frontend';
 import type { LoginResult } from '@vaadin/flow-frontend';
 import { AccessToken, OktaAuth } from '@okta/okta-auth-js';
+import * as Jwt4FlowEndpoint from './generated/Jwt4FlowEndpoint';
 
 // In the Okta admin panel set the following:
 //  - Application type: Single Page App (SPA)
@@ -48,6 +49,9 @@ export async function handleAuthCallback() {
 
       authClient.tokenManager.add('accessToken', accessToken);
       authClient.tokenManager.add('idToken', idToken);
+
+      await Jwt4FlowEndpoint.sync();
+
       return true;
     } catch (err) {
       console.warn(`authClient.token.parseFromUrl() errored: ${err}`);
