@@ -13,6 +13,7 @@ import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import '../contact-form/contact-form';
 import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
+import { cacheable } from '../../utils/cacheable';
 
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
@@ -28,6 +29,13 @@ export class ListView extends LitElement {
 
   @property({ type: Array })
   private contacts: Contact[] = [];
+
+  private get filteredContacts() {
+    const filter = this.filter.toLowerCase();
+    return this.contacts.filter(c =>
+      c.firstName.toLowerCase().includes(filter)
+      || c.lastName.toLowerCase().includes(filter));
+  }
 
   @property({ type: Object })
   private selectedContact?: Contact = undefined;
@@ -46,8 +54,8 @@ export class ListView extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     this.updateContacts();
-    this.statuses = await getContactStatuses();
-    this.companies = await findAllCompanies();
+    this.statuses = await cacheable(() => getContactStatuses(), 'statuses', []);
+    this.companies = await cacheable(() => findAllCompanies(), 'companies', []);
   }
 
   render() {
@@ -72,7 +80,7 @@ export class ListView extends LitElement {
         <div class="content">
           <vaadin-grid
             class="contacts-grid"
-            .items=${this.contacts}
+            .items=${this.filteredContacts}
             .selectedItems=${this.selectedContact ? [this.selectedContact] : []}
             @active-item-changed=${this.onGridSelectionChanged}
             multi-sort
@@ -181,7 +189,7 @@ export class ListView extends LitElement {
   }
 
   private async updateContacts() {
-    this.contacts = await find(this.filter);
+    this.contacts = await cacheable(() => find(''), 'contacts', []);
 
     // re-sync the editor form with the grid (so that it works with the same JS contact instance)
     // This allows to keep the grid highlighting for the selected contact when the filter changes

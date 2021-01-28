@@ -16,6 +16,7 @@ export async function login(username: string, password: string): Promise<LoginRe
     const result = await loginImpl(username, password);
     if (!result.error) {
       _isLoggedIn = true;
+      window.dispatchEvent(new CustomEvent('crm:login'));
       localStorage.setItem(LAST_LOGIN_TIMESTAMP, new Date().getTime() + '')
     }
     return result;
@@ -24,8 +25,14 @@ export async function login(username: string, password: string): Promise<LoginRe
 
 export async function logout() {
   _isLoggedIn = false;
+  window.dispatchEvent(new CustomEvent('crm:logout'));
   localStorage.removeItem(LAST_LOGIN_TIMESTAMP);
-  return await logoutImpl();
+  (window as any).Vaadin.TypeScript.csrfToken = 'logged-out/offline';
+  try {
+    await logoutImpl();
+  } catch {
+    // whatever
+  }
 }
 
 export function isLoggedIn() {

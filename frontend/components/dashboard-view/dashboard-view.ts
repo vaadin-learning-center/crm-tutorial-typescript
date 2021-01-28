@@ -2,6 +2,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-charts';
 import { getStats } from '../../generated/ServiceEndpoint';
+import { cacheable } from '../../utils/cacheable';
 import { Lumo } from '../../utils/lumo';
 import styles from './dashboard-view.css';
 
@@ -28,7 +29,7 @@ export class DashboardView extends LitElement {
   }
 
   async firstUpdated() {
-    const stats = await getStats();
+    const stats = await cacheable(() => getStats(), 'stats', {});
     this.numberOfContacts = stats.contacts;
     this.chartValues = Object.entries(stats.companyStats);
   }
