@@ -3,12 +3,12 @@ import { connect } from 'pwa-helpers';
 
 import '@vaadin/vaadin-charts';
 import { initContacts } from '../../store/contacts';
-import { chartValuesSelector } from '../../store/dashboard';
+import { chartValuesSelector } from './dashboard-view.state';
 import { Lumo } from '../../utils/lumo';
 import styles from './dashboard-view.css';
 
 import type { RootState } from '../../store';
-import type { PieChartSeriesValues } from '../../store/dashboard';
+import type { PieChartSeriesValues } from './dashboard-view.state';
 import { store } from '../../store';
 
 @customElement('dashboard-view')

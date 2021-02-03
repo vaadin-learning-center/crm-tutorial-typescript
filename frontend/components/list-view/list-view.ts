@@ -14,8 +14,9 @@ import {
   filteredContactsSelector,
   selectedContactSelector,
   setSelectedContact,
-  setFilter
-} from '../../store/contact-list';
+  setFilter,
+  contactListReducer,
+} from './list-view.store';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
@@ -28,8 +29,12 @@ import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Conta
 import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
 
-import type { RootState } from '../../store';
+import type { ContactsViewRootState } from './list-view.store';
 import { store } from '../../store';
+
+// lazy-load the contacts view slice in the Redux store
+// @ts-ignore
+store.attachReducers({ contactList: contactListReducer });
 
 @customElement('list-view')
 export class ListView extends connect(store)(LitElement) {
@@ -45,7 +50,7 @@ export class ListView extends connect(store)(LitElement) {
   @property({ type: Array })
   private statuses: Status[] = [];
 
-  stateChanged(state: RootState) {
+  stateChanged(state: ContactsViewRootState) {
     this.contacts = filteredContactsSelector(state);
     this.selectedContact = selectedContactSelector(state);
     this.companies = state.contacts.companies;

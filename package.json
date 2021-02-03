@@ -7,6 +7,7 @@
     "lit-element": "2.3.1",
     "@polymer/polymer": "3.2.0",
     "@reduxjs/toolkit": "^1.4.0",
+    "@redux-dynostore/core": "^3.1.0",
     "@vaadin/flow-frontend": "./target/flow-frontend",
     "@vaadin/form": "./target/flow-frontend/form",
     "@vaadin/vaadin-icons": "4.3.2",
@@ -153,6 +154,6 @@
       "loader-utils": "1.4.0",
       "construct-style-sheets-polyfill": "2.4.2"
     },
-    "hash": "d177c5b14bf8d031463332f49a072340dc49099ccca15b66abda4279f7008062"
+    "hash": "bab34eab860cd21cc891746fe33f7c2937b94ec57d6d4813b23ec83f8f1a1ed7"
   }
 }

@@ -2,6 +2,7 @@ dependencies:
   '@polymer/iron-icon': 3.0.1
   '@polymer/iron-list': 3.1.0
   '@polymer/polymer': 3.2.0
+  '@redux-dynostore/core': 3.1.1
   '@reduxjs/toolkit': 1.5.0
   '@vaadin/flow-frontend': 'link:target/flow-frontend'
   '@vaadin/form': 'link:target/flow-frontend/form'
@@ -1168,6 +1169,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-L6uV1oM6T6xbwbVx6t3biG5T2VSSB03LxnIrUd9M2pr6RkHVPFHJ37pC5MUwBAEhkGFJif7eks7fdMMSGZTeEQ==
+  /@redux-dynostore/core/3.1.1:
+    dev: false
+    peerDependencies:
+      redux: ^3.0.0 || ^4.0.0
+    resolution:
+      integrity: sha512-7tenoqwDr2DQ4L1i9PyAWhs2SZmmrIhq7bBeFXys3D52bxMx6uJ1hMlyyqT/D7VH+6+LifsdVFcnkR3kB8VDUA==
   /@reduxjs/toolkit/1.5.0:
     dependencies:
       immer: 8.0.1
@@ -8288,6 +8295,7 @@ specifiers:
   '@polymer/iron-icon': 3.0.1
   '@polymer/iron-list': 3.1.0
   '@polymer/polymer': 3.2.0
+  '@redux-dynostore/core': ^3.1.0
   '@reduxjs/toolkit': ^1.4.0
   '@types/validator': 13.1.0
   '@vaadin/flow-frontend': ./target/flow-frontend
