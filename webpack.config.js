@@ -23,7 +23,7 @@ module.exports = merge(flowDefaults,
   // (install the plugin with `npm install --save-dev webpack-bundle-analyzer`)
   // {
   //   plugins: [
-  //     new require('webpack-bundle-analyzer').BundleAnalyzerPlugin({
+  //     new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
   //       analyzerMode: 'static'
   //     })
   //   ]

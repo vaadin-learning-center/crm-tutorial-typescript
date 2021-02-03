@@ -76,7 +76,8 @@
     "file-loader": "6.1.0",
     "extra-watch-webpack-plugin": "1.0.3",
     "loader-utils": "1.4.0",
-    "construct-style-sheets-polyfill": "2.4.2"
+    "construct-style-sheets-polyfill": "2.4.2",
+    "webpack-bundle-analyzer": "^4.2.0"
   },
   "vaadin": {
     "dependencies": {
@@ -150,6 +151,6 @@
       "loader-utils": "1.4.0",
       "construct-style-sheets-polyfill": "2.4.2"
     },
-    "hash": "2963f9300eb8211c33d3f3fb9663668e179eb83fba88bfe0a3e0a54c529d24ed"
+    "hash": "8ac6e5c46798eaf14ec396ec9f80cae46473cf7ff5da1167fd53a4b35947fbab"
   }
 }
