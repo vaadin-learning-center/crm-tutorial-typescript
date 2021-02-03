@@ -2,7 +2,8 @@ import { Commands, Context, Router } from '@vaadin/router';
 
 import './components/main-layout/main-layout';
 import './components/list-view/list-view';
-import { isLoggedIn, logout } from './auth';
+import { logout } from './store/auth';
+import { store } from './store';
 
 import './utils/lumo';
 import client from './generated/connect-client.default';
@@ -31,14 +32,14 @@ const routes = [
    {
      path: '/logout',
      action: async (_: Context, commands: Commands) => {
-       await logout();
+       store.dispatch(logout());
        return commands.redirect('/');
      }
    },
   {
     path: '/',
     action: async (_: Router.Context, commands: Router.Commands) => {
-      if (!isLoggedIn()) {
+      if (!store.getState().auth.isLoggedIn) {
         return commands.redirect('/login');
       }
       return undefined;

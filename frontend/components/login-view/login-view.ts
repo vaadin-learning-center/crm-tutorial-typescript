@@ -1,15 +1,19 @@
 import { customElement, html, LitElement, property } from 'lit-element';
+import { connect } from 'pwa-helpers'
 
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
-import { login } from '../../auth';
+import { login } from '../../store/auth';
 import { Lumo } from '../../utils/lumo';
 import styles from './login-view.css';
 
+import type { RootState } from '../../store';
+import { store } from '../../store';
+
 @customElement('login-view')
-export class LoginView extends LitElement implements AfterEnterObserver {
+export class LoginView extends connect(store)(LitElement) implements AfterEnterObserver {
 
   @property({type: Boolean})
   private error = false;
@@ -19,6 +23,21 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   @property()
   private errorMessage = '';
+
+  private lastIsLoggedIn = false;
+
+  stateChanged(state: RootState) {
+    if (this.lastIsLoggedIn != state.auth.isLoggedIn) {
+      this.lastIsLoggedIn = state.auth.isLoggedIn;
+      if (state.auth.isLoggedIn) {
+        this.onSuccess(state.auth.loginResult!);
+      }
+    }
+
+    this.error = state.auth.loginResult?.error || false;
+    this.errorTitle = state.auth.loginResult?.errorTitle || '';
+    this.errorMessage = state.auth.loginResult?.errorMessage || '';
+  }
 
   private returnUrl = '/';
 
@@ -65,18 +84,11 @@ export class LoginView extends LitElement implements AfterEnterObserver {
     this.returnUrl = location.redirectFrom || this.returnUrl;
   }
 
-  async login(event: CustomEvent): Promise<LoginResult> {
-    this.error = false;
-    const result = await login(event.detail.username, event.detail.password);
-    this.error = result.error;
-    this.errorTitle = result.errorTitle || this.errorTitle;
-    this.errorMessage = result.errorMessage || this.errorMessage;
-
-    if (!result.error) {
-      this.onSuccess(result);
-    }
-
-    return result;
+  private login(event: CustomEvent) {
+    store.dispatch(login({
+      username: event.detail.username,
+      password: event.detail.password
+    }));
   }
 
   private get i18n(): LoginI18n {

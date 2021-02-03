@@ -1,5 +1,5 @@
 import { InvalidSessionMiddleware } from '@vaadin/flow-frontend';
-import { setSessionExpired } from '../auth';
+import { setSessionExpired } from '../store/auth';
 
 export const invalidSessionMiddleware = new InvalidSessionMiddleware(
   async () => {

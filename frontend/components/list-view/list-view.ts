@@ -1,14 +1,22 @@
-import { customElement, html, LitElement, property, query } from 'lit-element';
+import { customElement, html, LitElement, property } from 'lit-element';
+import { connect } from 'pwa-helpers';
 import { classMap } from 'lit-html/directives/class-map';
 import {
-  find,
-  saveContact,
+  initCompanies,
+  initContacts,
+  initStatuses,
   deleteContact,
-  getContactStatuses,
-  findAllCompanies,
-} from '../../generated/ServiceEndpoint';
+  saveContact
+} from '../../store/contacts';
+import {
+  addNewContact,
+  clearSelection,
+  filteredContactsSelector,
+  selectedContactSelector,
+  setSelectedContact,
+  setFilter
+} from '../../store/contact-list';
 import '@vaadin/vaadin-grid';
-import { GridElement } from '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import '../contact-form/contact-form';
@@ -16,16 +24,15 @@ import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRende
 
 import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
 import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
-import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { Lumo } from '../../utils/lumo';
 import styles from './list-view.css';
 
-@customElement('list-view')
-export class ListView extends LitElement {
-  @query('vaadin-grid')
-  private grid!: GridElement;
+import type { RootState } from '../../store';
+import { store } from '../../store';
 
+@customElement('list-view')
+export class ListView extends connect(store)(LitElement) {
   @property({ type: Array })
   private contacts: Contact[] = [];
 
@@ -38,16 +45,20 @@ export class ListView extends LitElement {
   @property({ type: Array })
   private statuses: Status[] = [];
 
-  @property({ type: String })
-  private filter = '';
+  stateChanged(state: RootState) {
+    this.contacts = filteredContactsSelector(state);
+    this.selectedContact = selectedContactSelector(state);
+    this.companies = state.contacts.companies;
+    this.statuses = state.contacts.statuses;
+  }
 
   static styles = [Lumo, styles];
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
-    this.updateContacts();
-    this.statuses = await getContactStatuses();
-    this.companies = await findAllCompanies();
+    store.dispatch(initContacts(null));
+    store.dispatch(initCompanies(null));
+    store.dispatch(initStatuses(null));
   }
 
   render() {
@@ -62,10 +73,10 @@ export class ListView extends LitElement {
           <vaadin-text-field
             clear-button-visible
             placeholder="Search"
-            @input=${(e: any) => this.setFilter(e.target.value)}
+            @input=${(e: any) => store.dispatch(setFilter(e.target.value))}
           ></vaadin-text-field>
           <vaadin-button
-            @click=${() => this.addNewContact()}
+            @click=${() => store.dispatch(addNewContact())}
             >Add contact</vaadin-button
           >
         </div>
@@ -119,78 +130,24 @@ export class ListView extends LitElement {
             .statuses=${this.statuses}
             .onSubmit="${(contact: Contact) => this.saveContact(contact)}"
             .onDelete="${(contact: Contact) => this.deleteContact(contact)}"
-            .onCancel="${() => this.clearSelection()}"
+            .onCancel="${() => store.dispatch(clearSelection())}"
           ></contact-form>
         </div>
       </div>
     `;
   }
 
-  private addNewContact() {
-    this.selectedContact = ContactModel.createEmptyValue();
+  private saveContact(contact: Contact) {
+    store.dispatch(saveContact(contact));
+    store.dispatch(clearSelection());
   }
 
-  private async saveContact(contact: Contact) {
-    // optimistic UI update
-    this.clearSelection();
-    const idx = this.contacts.findIndex(c => c.id === contact.id);
-    if (idx > -1) {
-      // replace the contact with the matching id
-      this.contacts[idx] = contact;
-      // explicitly triggering a grid refresh because the contacts array is update in-place
-      this.grid.clearCache();
-    } else {
-      // append a new contact to the contacts list
-      this.contacts.push(contact);
-      // explicitly triggering a grid refresh because the contacts array is update in-place
-      this.grid.clearCache();
-    }
-
-    // update the backend and re-sync the UI
-    await saveContact(contact);
-    await this.refreshContacts();
-  }
-
-  private async deleteContact(contact: Contact) {
-    // optimistic UI update
-    this.clearSelection();
-    const idx = this.contacts.findIndex(c => c.id === contact.id);
-    if (idx > -1) {
-      this.contacts.splice(idx, 1);
-      // explicitly triggering a grid refresh because the contacts array is update in-place
-      this.grid.clearCache();
-    }
-
-    // update the backend and re-sync the UI
-    await deleteContact(contact);
-    await this.refreshContacts();
-  }
-
-  private async refreshContacts() {
-    this.clearSelection();
-    await this.updateContacts();
-  }
-
-  private clearSelection() {
-    this.selectedContact = undefined;
-  }
-
-  private async setFilter(filter: string) {
-    this.filter = filter;
-    await this.updateContacts();
-  }
-
-  private async updateContacts() {
-    this.contacts = await find(this.filter);
-
-    // re-sync the editor form with the grid (so that it works with the same JS contact instance)
-    // This allows to keep the grid highlighting for the selected contact when the filter changes
-    if (this.selectedContact && this.selectedContact.id !== 0) {
-      this.selectedContact = this.contacts.find(c => c.id === this.selectedContact?.id);
-    }
+  private deleteContact(contact: Contact) {
+    store.dispatch(deleteContact(contact));
+    store.dispatch(clearSelection());
   }
 
   private onGridSelectionChanged(e: { detail: { value?: Contact } }) {
-    this.selectedContact = e.detail.value;
+    store.dispatch(setSelectedContact(e.detail.value));
   }
 }
