@@ -1,4 +1,5 @@
 dependencies:
+  '@adobe/lit-mobx': 1.0.1_lit-element@2.3.1+mobx@6.1.4
   '@polymer/iron-icon': 3.0.1
   '@polymer/iron-list': 3.1.0
   '@polymer/polymer': 3.2.0
@@ -39,6 +40,7 @@ dependencies:
   '@vaadin/vaadin-time-picker': 3.0.0-alpha1
   '@vaadin/vaadin-upload': 5.0.0-alpha1
   lit-element: 2.3.1
+  mobx: 6.1.4
 devDependencies:
   '@types/validator': 13.1.0
   awesome-typescript-loader: 5.2.1_typescript@4.0.3
@@ -75,6 +77,16 @@ devDependencies:
   workbox-webpack-plugin: 5.1.4_webpack@4.42.0
 lockfileVersion: 5.1
 packages:
+  /@adobe/lit-mobx/1.0.1_lit-element@2.3.1+mobx@6.1.4:
+    dependencies:
+      lit-element: 2.3.1
+      mobx: 6.1.4
+    dev: false
+    peerDependencies:
+      lit-element: ^2.0.0
+      mobx: ^5.0.0 || ^6.0.0
+    resolution:
+      integrity: sha512-PV4/x2q7rdmcKwAh770fRc0dydR+XeHjCbMI0o4MiL4VYWzjt2DJ1ejeGRZkGt8cw7UCoN6CkbE0NC4mnp1Sdg==
   /@babel/cli/7.12.10_@babel+core@7.12.10:
     dependencies:
       '@babel/core': 7.12.10
@@ -5677,6 +5689,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+  /mobx/6.1.4:
+    dev: false
+    resolution:
+      integrity: sha512-DorvGl+ssJ9i5Sef90XzcIuOBMa2kWSC+PidTLHtgBX4f1bXOd+NKtujSjaRnQMDLTRkCzfJEFcC08hEjzCVaA==
   /move-concurrently/1.0.1:
     dependencies:
       aproba: 1.2.0
@@ -8247,6 +8263,7 @@ packages:
     resolution:
       integrity: sha512-AX3Zw5iPruN5ie6xGRIDgqkT+ZhnRlZMLMHAs8tg7nRruy2Nb+i5o9bwghAogtM08q1dpr2LVoS8KSTMYpWXUw==
 specifiers:
+  '@adobe/lit-mobx': ^1.0.0
   '@polymer/iron-icon': 3.0.1
   '@polymer/iron-list': 3.1.0
   '@polymer/polymer': 3.2.0
@@ -8303,6 +8320,7 @@ specifiers:
   lit-element: 2.3.1
   lit-html: 1.2.1
   loader-utils: 1.4.0
+  mobx: ^6.0.0
   prettier-plugin-java: ^0.7.1
   progress-webpack-plugin: 0.0.24
   raw-loader: 4.0.0

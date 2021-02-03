@@ -2,6 +2,7 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "dependencies": {
+    "@adobe/lit-mobx": "^1.0.0",
     "@vaadin/router": "1.7.2",
     "@vaadin/vaadin-charts": "7.0.0-alpha3",
     "lit-element": "2.3.1",
@@ -41,7 +42,8 @@
     "@vaadin/vaadin-tabs": "4.0.0-alpha4",
     "@vaadin/vaadin-lumo-styles": "1.6.1",
     "@vaadin/vaadin-material-styles": "1.3.2",
-    "@vaadin/vaadin-avatar": "2.0.0-alpha1"
+    "@vaadin/vaadin-avatar": "2.0.0-alpha1",
+    "mobx": "^6.0.0"
   },
   "devDependencies": {
     "awesome-typescript-loader": "5.2.1",
@@ -151,6 +153,6 @@
       "loader-utils": "1.4.0",
       "construct-style-sheets-polyfill": "2.4.2"
     },
-    "hash": "8ac6e5c46798eaf14ec396ec9f80cae46473cf7ff5da1167fd53a4b35947fbab"
+    "hash": "f55a0191f48e865ad20fef7191c62f452b1f059671ea1179cb46153d62fdea97"
   }
 }
