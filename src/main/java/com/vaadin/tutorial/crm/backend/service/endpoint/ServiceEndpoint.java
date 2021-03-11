@@ -35,8 +35,13 @@ public class ServiceEndpoint {
   }
 
   public void saveContact(Contact contact) {
-    com.vaadin.tutorial.crm.backend.entity.Contact dbContact = contactService.find(contact.getId())
-        .orElse(new com.vaadin.tutorial.crm.backend.entity.Contact());
+    com.vaadin.tutorial.crm.backend.entity.Contact dbContact;
+    if (contact.getId() == null) {
+      dbContact = new com.vaadin.tutorial.crm.backend.entity.Contact();
+    } else {
+      dbContact = contactService.find(contact.getId())
+              .orElse(new com.vaadin.tutorial.crm.backend.entity.Contact());
+    }
 
     dbContact.setFirstName(contact.getFirstName());
     dbContact.setLastName(contact.getLastName());

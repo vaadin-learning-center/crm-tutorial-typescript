@@ -4,7 +4,6 @@ import './components/main-layout/main-layout';
 import './components/list-view/list-view';
 import { isLoggedIn, logout } from './auth';
 
-import './utils/lumo';
 import client from './generated/connect-client.default';
 import { invalidSessionMiddleware } from './utils/invalid-session-middleware';
 

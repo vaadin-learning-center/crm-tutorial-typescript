@@ -1,12 +1,12 @@
 import { customElement, html, LitElement } from 'lit-element';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-app-layout';
 import '@vaadin/vaadin-app-layout/theme/lumo/vaadin-drawer-toggle';
-import { Lumo } from '../../utils/lumo';
+import { applyTheme } from 'Frontend/generated/theme';
 import styles from './main-layout.css';
 
 @customElement('main-layout')
 export class MainLayout extends LitElement {
-  static styles = [Lumo, styles];
+  static styles = [styles];
 
   render() {
     return html`
@@ -25,5 +25,10 @@ export class MainLayout extends LitElement {
         <slot></slot>
       </vaadin-app-layout>
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    applyTheme(this.shadowRoot!);
   }
 }
