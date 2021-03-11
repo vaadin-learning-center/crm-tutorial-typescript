@@ -1,8 +1,8 @@
 import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-charts';
-import { getStats } from '../../generated/ServiceEndpoint';
-import { Lumo } from '../../utils/lumo';
+import { getStats } from 'Frontend/generated/ServiceEndpoint';
+import { applyTheme } from 'Frontend/generated/theme';
 import styles from './dashboard-view.css';
 
 @customElement('dashboard-view')
@@ -13,7 +13,7 @@ export class DashboardView extends LitElement {
   @property()
   private chartValues: any = [];
 
-  static styles = [Lumo, styles];
+  static styles = [styles];
 
   render() {
     return html`
@@ -25,6 +25,11 @@ export class DashboardView extends LitElement {
         <vaadin-chart-series .values=${this.chartValues}></vaadin-chart-series>
       </vaadin-chart>
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    applyTheme(this.shadowRoot!);
   }
 
   async firstUpdated() {

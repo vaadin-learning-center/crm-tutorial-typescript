@@ -4,12 +4,12 @@ import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-text-field/vaadin-email-field';
 import '@vaadin/vaadin-combo-box';
 import '@vaadin/vaadin-button';
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
-import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
-import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
-import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
+import Company from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Company';
+import Contact from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import ContactModel from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import Status from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { Binder, field } from '@vaadin/form';
-import { Lumo } from '../../utils/lumo';
+import { applyTheme } from 'Frontend/generated/theme';
 
 import styles from './contact-form.css';
 
@@ -47,7 +47,7 @@ export class ContactForm extends LitElement {
     this.binder.read(value);
   }
 
-  static styles = [ Lumo, styles ];
+  static styles = [styles];
 
   private binder = new Binder(this, ContactModel);
 
@@ -102,5 +102,10 @@ export class ContactForm extends LitElement {
 
   cancel() {
     return this.onCancel(this.binder.value);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    applyTheme(this.shadowRoot!);
   }
 }

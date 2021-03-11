@@ -4,8 +4,8 @@ import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login';
 import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
-import { login } from '../../auth';
-import { Lumo } from '../../utils/lumo';
+import { login } from 'Frontend/auth';
+import { applyTheme } from 'Frontend/generated/theme';
 import styles from './login-view.css';
 
 @customElement('login-view')
@@ -24,7 +24,7 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   private onSuccess: (result: LoginResult) => void;
 
-  static styles = [Lumo, styles];
+  static styles = [styles];
 
   constructor(){
     super();
@@ -59,6 +59,11 @@ export class LoginView extends LitElement implements AfterEnterObserver {
         @login="${this.login}">    
       </vaadin-login-overlay>
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    applyTheme(this.shadowRoot!);
   }
 
   onAfterEnter(location: RouterLocation) {

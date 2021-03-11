@@ -6,19 +6,19 @@ import {
   deleteContact,
   getContactStatuses,
   findAllCompanies,
-} from '../../generated/ServiceEndpoint';
+} from 'Frontend/generated/ServiceEndpoint';
 import '@vaadin/vaadin-grid';
 import { GridElement } from '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
-import '../contact-form/contact-form';
-import { sortAndFilterGridHeaderRenderer } from '../sortAndFilterGridHeaderRenderer';
+import 'Frontend/components/contact-form/contact-form';
+import { sortAndFilterGridHeaderRenderer } from 'Frontend/components/sortAndFilterGridHeaderRenderer';
 
-import Company from '../../generated/com/vaadin/tutorial/crm/backend/entity/Company';
-import Contact from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact';
-import ContactModel from '../../generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
-import Status from '../../generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
-import { Lumo } from '../../utils/lumo';
+import Company from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Company';
+import Contact from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Contact';
+import ContactModel from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
+import Status from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
+import { applyTheme } from 'Frontend/generated/theme';
 import styles from './list-view.css';
 
 @customElement('list-view')
@@ -41,13 +41,15 @@ export class ListView extends LitElement {
   @property({ type: String })
   private filter = '';
 
-  static styles = [Lumo, styles];
+  static styles = [styles];
 
   async connectedCallback() {
     super.connectedCallback();
     this.updateContacts();
     this.statuses = await getContactStatuses();
     this.companies = await findAllCompanies();
+
+    applyTheme(this.shadowRoot!);
   }
 
   render() {
