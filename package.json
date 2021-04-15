@@ -12,7 +12,7 @@
     "@vaadin/vaadin-grid": "6.0.0",
     "@vaadin/vaadin-split-layout": "4.3.0",
     "@vaadin/vaadin-combo-box": "6.0.0",
-    "@vaadin/vaadin-core-shrinkwrap": "19.0.0",
+    "@vaadin/vaadin-core-shrinkwrap": "20.0.0-alpha1",
     "@vaadin/vaadin-upload": "5.0.0",
     "@vaadin/vaadin-dialog": "2.5.2",
     "@vaadin/vaadin-select": "3.0.0",
@@ -41,13 +41,13 @@
     "@vaadin/vaadin-tabs": "4.0.0",
     "@vaadin/vaadin-lumo-styles": "1.6.1",
     "@vaadin/vaadin-material-styles": "1.3.2",
-    "@vaadin/vaadin-avatar": "2.0.2"
+    "@vaadin/vaadin-avatar": "2.0.0"
   },
   "devDependencies": {
     "compression-webpack-plugin": "4.0.1",
     "html-webpack-plugin": "4.5.1",
     "prettier-plugin-java": "^0.7.1",
-    "typescript": "4.0.3",
+    "typescript": "4.1.5",
     "webpack": "4.46.0",
     "webpack-babel-multi-target-plugin": "2.3.3",
     "webpack-cli": "3.3.11",
@@ -64,15 +64,16 @@
     "extract-loader": "5.1.0",
     "idb": "5.0.6",
     "glob": "7.1.6",
-    "workbox-core": "5.1.4",
-    "workbox-precaching": "5.1.4",
+    "workbox-core": "6.1.0",
+    "workbox-precaching": "6.1.0",
     "webpack-manifest-plugin": "3.0.0",
-    "workbox-webpack-plugin": "5.1.4",
+    "workbox-webpack-plugin": "6.1.0",
     "file-loader": "6.2.0",
     "extra-watch-webpack-plugin": "1.0.3",
     "loader-utils": "2.0.0",
     "construct-style-sheets-polyfill": "2.4.16",
-    "ts-loader": "8.0.12"
+    "ts-loader": "8.0.12",
+    "snowpack": "3.0.13"
   },
   "vaadin": {
     "dependencies": {
@@ -83,7 +84,7 @@
       "@vaadin/vaadin-grid": "6.0.0",
       "@vaadin/vaadin-split-layout": "4.3.0",
       "@vaadin/vaadin-combo-box": "6.0.0",
-      "@vaadin/vaadin-core-shrinkwrap": "19.0.0",
+      "@vaadin/vaadin-core-shrinkwrap": "20.0.0-alpha1",
       "@vaadin/vaadin-upload": "5.0.0",
       "@vaadin/vaadin-dialog": "2.5.2",
       "@vaadin/vaadin-select": "3.0.0",
@@ -112,7 +113,7 @@
       "@vaadin/vaadin-tabs": "4.0.0",
       "@vaadin/vaadin-lumo-styles": "1.6.1",
       "@vaadin/vaadin-material-styles": "1.3.2",
-      "@vaadin/vaadin-avatar": "2.0.2"
+      "@vaadin/vaadin-avatar": "2.0.0"
     },
     "devDependencies": {
       "compression-webpack-plugin": "4.0.1",
@@ -124,7 +125,7 @@
       "webpack": "4.46.0",
       "html-webpack-plugin": "4.5.1",
       "chokidar": "^3.5.0",
-      "typescript": "4.0.3",
+      "typescript": "4.1.5",
       "webpack-merge": "4.2.2",
       "webpack-dev-server": "3.11.0",
       "css-loader": "4.2.1",
@@ -132,16 +133,17 @@
       "extract-loader": "5.1.0",
       "idb": "5.0.6",
       "glob": "7.1.6",
-      "workbox-core": "5.1.4",
-      "workbox-precaching": "5.1.4",
+      "workbox-core": "6.1.0",
+      "workbox-precaching": "6.1.0",
       "webpack-manifest-plugin": "3.0.0",
-      "workbox-webpack-plugin": "5.1.4",
+      "workbox-webpack-plugin": "6.1.0",
       "file-loader": "6.2.0",
       "extra-watch-webpack-plugin": "1.0.3",
       "loader-utils": "2.0.0",
       "construct-style-sheets-polyfill": "2.4.16",
-      "ts-loader": "8.0.12"
+      "ts-loader": "8.0.12",
+      "snowpack": "3.0.13"
     },
-    "hash": "2c76599dc8ed3bcaf1ad7c556d00db305694ae9194424ab33a7e4ce0d975ca3d"
+    "hash": "2b650ab08373f1806d86dc6ce213579308534a16fce32d22eb6dcafa28945bcb"
   }
 }
