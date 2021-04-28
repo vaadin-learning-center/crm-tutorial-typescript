@@ -3,7 +3,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 import '@vaadin/vaadin-charts';
 import { getStats } from 'Frontend/generated/ServiceEndpoint';
 import { applyTheme } from 'Frontend/generated/theme';
-import styles from './dashboard-view.css';
+import styles from './dashboard-view-styles.css';
 
 @customElement('dashboard-view')
 export class DashboardView extends LitElement {

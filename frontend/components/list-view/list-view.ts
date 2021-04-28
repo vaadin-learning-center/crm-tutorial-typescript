@@ -19,7 +19,7 @@ import Contact from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/C
 import ContactModel from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/ContactModel';
 import Status from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Contact/Status';
 import { applyTheme } from 'Frontend/generated/theme';
-import styles from './list-view.css';
+import styles from './list-view-styles.css';
 
 @customElement('list-view')
 export class ListView extends LitElement {
@@ -68,7 +68,7 @@ export class ListView extends LitElement {
           ></vaadin-text-field>
           <vaadin-button
             @click=${() => this.addNewContact()}
-            >Add contact</vaadin-button
+            >Add NEW contact</vaadin-button
           >
         </div>
         <div class="content">

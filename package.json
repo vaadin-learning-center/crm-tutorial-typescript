@@ -73,7 +73,7 @@
     "loader-utils": "2.0.0",
     "construct-style-sheets-polyfill": "2.4.16",
     "ts-loader": "8.0.12",
-    "snowpack": "3.0.13"
+    "snowpack": "3.2.2"
   },
   "vaadin": {
     "dependencies": {
@@ -142,8 +142,8 @@
       "loader-utils": "2.0.0",
       "construct-style-sheets-polyfill": "2.4.16",
       "ts-loader": "8.0.12",
-      "snowpack": "3.0.13"
+      "snowpack": "3.2.2"
     },
-    "hash": "2b650ab08373f1806d86dc6ce213579308534a16fce32d22eb6dcafa28945bcb"
+    "hash": "30817f2afb8fd3d0b4a5dd0b8fe02870b68297eb8ef455d32416e782e2192847"
   }
 }

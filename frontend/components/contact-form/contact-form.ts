@@ -11,7 +11,7 @@ import Status from 'Frontend/generated/com/vaadin/tutorial/crm/backend/entity/Co
 import { Binder, field } from '@vaadin/form';
 import { applyTheme } from 'Frontend/generated/theme';
 
-import styles from './contact-form.css';
+import styles from './contact-form-styles.css';
 
 @customElement('contact-form')
 export class ContactForm extends LitElement {

@@ -56,7 +56,7 @@ specifiers:
   lit-html: 1.3.0
   loader-utils: 2.0.0
   prettier-plugin-java: ^0.7.1
-  snowpack: 3.0.13
+  snowpack: 3.2.2
   terser: 4.6.7
   ts-loader: 8.0.12
   typescript: 4.1.5
@@ -129,7 +129,7 @@ devDependencies:
   lit-html: 1.3.0
   loader-utils: 2.0.0
   prettier-plugin-java: 0.7.1
-  snowpack: 3.0.13
+  snowpack: 3.2.2
   terser: 4.6.7
   ts-loader: 8.0.12_typescript@4.1.5+webpack@4.46.0
   typescript: 4.1.5
@@ -3248,6 +3248,11 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /cli-spinners/2.6.0:
+    resolution: {integrity: sha512-t+4/y50K/+4xcCRosKkA7W4gTr1MySvLV0q+PxmG7FJ5g+66ChKurYjxBCjHggHH3HA5Hh9cy+lcUGWDqVH+4Q==}
+    engines: {node: '>=6'}
+    dev: true
+
   /cliui/5.0.0:
     resolution: {integrity: sha512-PYeGSEmmHM6zvoef2w8TPzlrnNpXIjTipYK780YswmIP9vjxmd6Y2a3CB2Ks6/AU8NHjZugXvo8w3oWM2qnwXA==}
     dependencies:
@@ -3890,8 +3895,8 @@ packages:
       is-symbol: 1.0.3
     dev: true
 
-  /esbuild/0.8.57:
-    resolution: {integrity: sha512-j02SFrUwFTRUqiY0Kjplwjm1psuzO1d6AjaXKuOR9hrY0HuPsT6sV42B6myW34h1q4CRy+Y3g4RU/cGJeI/nNA==}
+  /esbuild/0.9.7:
+    resolution: {integrity: sha512-VtUf6aQ89VTmMLKrWHYG50uByMF4JQlVysb8dmg6cOgW8JnFCipmz7p+HNBl+RR3LLCuBxFGVauAe2wfnF9bLg==}
     hasBin: true
     requiresBuild: true
     dev: true
@@ -4112,6 +4117,10 @@ packages:
     engines: {node: '>=0.8.0'}
     dependencies:
       websocket-driver: 0.7.4
+    dev: true
+
+  /fdir/5.0.0:
+    resolution: {integrity: sha512-cteqwWMA43lEmgwOg5HSdvhVFD39vHjQDhZkRMlKmeoNPtSSgUw1nUypydiY2upMdGiBFBZvNBDbnoBh0yCzaQ==}
     dev: true
 
   /figgy-pudding/3.5.2:
@@ -6789,14 +6798,17 @@ packages:
       use: 3.1.1
     dev: true
 
-  /snowpack/3.0.13:
-    resolution: {integrity: sha512-USTcpfJ68rbuFvUygw+3n9qS1CC/tGsr/JNVc6FNk0ZRfGBE4OmB+Mmk5nWtdxi546GeCr/GvveJenYLen/WpA==}
+  /snowpack/3.2.2:
+    resolution: {integrity: sha512-lt2FEFpvrWSBhFPlQxDr2hG7hnyucLEh7QSJqUUcAljrt8UoWJjTZlvZ4shGiJLkNjxMgGrJKj37y08/9OvXMw==}
     engines: {node: '>=10.19.0'}
     hasBin: true
     dependencies:
+      cli-spinners: 2.6.0
       default-browser-id: 2.0.0
-      esbuild: 0.8.57
+      esbuild: 0.9.7
+      fdir: 5.0.0
       open: 7.4.2
+      picomatch: 2.2.3
       resolve: 1.20.0
       rollup: 2.45.2
     optionalDependencies:

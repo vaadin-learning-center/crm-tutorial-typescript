@@ -6,7 +6,7 @@ import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
 import { login } from 'Frontend/auth';
 import { applyTheme } from 'Frontend/generated/theme';
-import styles from './login-view.css';
+import styles from './login-view-styles.css';
 
 @customElement('login-view')
 export class LoginView extends LitElement implements AfterEnterObserver {
