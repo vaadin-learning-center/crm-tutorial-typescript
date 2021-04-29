@@ -68,7 +68,7 @@ export class ListView extends LitElement {
           ></vaadin-text-field>
           <vaadin-button
             @click=${() => this.addNewContact()}
-            >Add NEW contact</vaadin-button
+            >Add contact</vaadin-button
           >
         </div>
         <div class="content">

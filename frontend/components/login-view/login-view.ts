@@ -2,7 +2,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login';
-import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
+import { AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
 import { login } from 'Frontend/auth';
 import { applyTheme } from 'Frontend/generated/theme';
@@ -28,8 +28,12 @@ export class LoginView extends LitElement implements AfterEnterObserver {
 
   constructor(){
     super();
-    this.onSuccess = () => {
-      Router.go(this.returnUrl);
+    this.onSuccess = (result) => {
+      // If a login redirect was initiated by opening a protected URL, the server knows where to go (result.redirectUrl).
+      // If a login redirect was initiated by the client router, this.returnUrl knows where to go.
+      // If login was opened directly, use the default URL provided by the server.
+      // As we do not know if the target is a resource or a Fusion view or a Flow view, we cannot just use Router.go
+      window.location.href = result.redirectUrl || this.returnUrl || result.defaultUrl || '/';
     };
   }
 
