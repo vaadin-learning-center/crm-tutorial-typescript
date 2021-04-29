@@ -11,8 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>19.0.0.alpha2</vaadin.version>
-
+        <vaadin.version>20.0-SNAPSHOT</vaadin.version>
+        <flow.version>7.0.pr-10754-SNAPSHOT</flow.version>
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
     </properties>
@@ -27,7 +27,7 @@
         <pluginRepository>
             <id>central</id>
             <url>https://repo1.maven.org/maven2/</url>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots><enabled>true</enabled></snapshots>
         </pluginRepository>
         <!-- The current version of Vaadin 18 is a pre-release version -->
         <pluginRepository>
@@ -44,7 +44,7 @@
         <repository>
             <id>central</id>
             <url>https://repo1.maven.org/maven2/</url>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <!-- Repository used by many Vaadin add-ons -->
         <repository>
@@ -64,6 +64,13 @@
         <dependencies>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>flow-bom</artifactId>
+                <version>${flow.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
                 <version>${vaadin.version}</version>
                 <type>pom</type>
@@ -76,6 +83,12 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>  <!-- declare the exclusion here -->
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>flow-dnd</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -119,7 +132,7 @@
             <version>3.7.1</version>
             <scope>test</scope>
         </dependency>
-
+        
     </dependencies>
 
     <build>
@@ -143,8 +156,8 @@
             -->
             <plugin>
                 <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.version}</version>
+                <artifactId>flow-maven-plugin</artifactId>
+                <version>${flow.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -182,7 +195,7 @@
                     </plugin>
                     <plugin>
                         <groupId>com.vaadin</groupId>
-                        <artifactId>vaadin-maven-plugin</artifactId>
+                        <artifactId>flow-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <goals>

@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.security.PermitAll;
+
 import com.vaadin.flow.server.connect.Endpoint;
-import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.entity.Contact.Status;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Endpoint
 @Service
+@PermitAll
 public class ServiceEndpoint {
 
   private final ContactService contactService;

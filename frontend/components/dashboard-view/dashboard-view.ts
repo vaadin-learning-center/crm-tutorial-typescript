@@ -29,7 +29,7 @@ export class DashboardView extends LitElement {
 
   async firstUpdated() {
     const stats = await getStats();
-    this.numberOfContacts = stats.contacts;
-    this.chartValues = Object.entries(stats.companyStats);
+    this.numberOfContacts = stats ? stats.contacts : 0;
+    this.chartValues = Object.entries(stats ? stats.companyStats : []);
   }
 }

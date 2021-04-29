@@ -43,8 +43,8 @@ export class ContactForm extends LitElement {
   statuses: Status[] = [];
 
   @property({ type: Object })
-  set contact(value: Contact){
-    this.binder.read(value);
+  set contact(value: Contact | undefined){
+    this.binder.read(value || ContactModel.createEmptyValue());
   }
 
   static styles = [ Lumo, styles ];

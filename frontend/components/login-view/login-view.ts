@@ -2,7 +2,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login';
-import { Router, AfterEnterObserver, RouterLocation } from '@vaadin/router';
+import { AfterEnterObserver, Router, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
 import { login } from '../../auth';
 import { Lumo } from '../../utils/lumo';
@@ -20,16 +20,18 @@ export class LoginView extends LitElement implements AfterEnterObserver {
   @property()
   private errorMessage = '';
 
-  private returnUrl = '/';
-
   private onSuccess: (result: LoginResult) => void;
+
+  // the url to redirect to after a successful login
+  private returnUrl?: string
 
   static styles = [Lumo, styles];
 
   constructor(){
     super();
-    this.onSuccess = () => {
-      Router.go(this.returnUrl);
+    this.onSuccess = (result : LoginResult) => {
+      window.location.href =
+      result.redirectUrl || this.returnUrl || result.defaultUrl || '/';
     };
   }
 
@@ -61,10 +63,6 @@ export class LoginView extends LitElement implements AfterEnterObserver {
     `;
   }
 
-  onAfterEnter(location: RouterLocation) {
-    this.returnUrl = location.redirectFrom || this.returnUrl;
-  }
-
   async login(event: CustomEvent): Promise<LoginResult> {
     this.error = false;
     const result = await login(event.detail.username, event.detail.password);
@@ -77,6 +75,10 @@ export class LoginView extends LitElement implements AfterEnterObserver {
     }
 
     return result;
+  }
+
+  onAfterEnter(location: RouterLocation) {
+    this.returnUrl = location.redirectFrom;
   }
 
   private get i18n(): LoginI18n {
