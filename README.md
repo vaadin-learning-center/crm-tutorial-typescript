@@ -12,6 +12,23 @@ This is a TypeScript-based version of the [Vaadin CRM](https://github.com/vaadin
 
 See the [Vaadin FAQ](https://vaadin.com/faq) for more details on the difference between the Vaadin Java and TypeScript APIs.
 
+## Snowpack
+
+This branch has a number of changes required to work with Snowpack 3:
+ - `<flow.version>7.0.snowpack-SNAPSHOT</flow.version>` in `pom.xml`
+ - `vaadin.useSnowpack = true` in `application.properties`
+ - different file names for a component definition and its styles (e.g. `components/contact-form/contact-form.ts` and `components/contact-form/contact-form-styles.css`) because Snowpack turns both files into .js and if the extension is the only difference, there is a name collision, and the app would not start.
+
+All the changes above are not sufficient to make the app work with Snowpack out-of-the-box.
+Since the Snowpack feature branch is still a very early PoC, it does not have replacements for all webpack plugins Flow / Fusion apps need during the build.
+Most notably, the theming support is missing, i.e. generated theme files are not produces during a Snowpack build.
+
+Workaround: run a single Webpack dev build first, before running a Snowpack build:
+ - comment out `vaadin.useSnowpack = true` in `application.properties`
+ - `mvn` <-- Webpack generated all needed files
+ - stop the dev server
+ - uncomment `vaadin.useSnowpack = true` in `application.properties`
+ - `mvn` <-- you are using Snowpack now
 
 ## Key differences from [Vaadin CRM](https://github.com/vaadin-learning-center/crm-tutorial)
 
