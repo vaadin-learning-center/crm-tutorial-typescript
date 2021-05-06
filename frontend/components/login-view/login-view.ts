@@ -2,7 +2,7 @@ import { customElement, html, LitElement, property } from 'lit-element';
 
 import '@vaadin/vaadin-login/vaadin-login-overlay';
 import { LoginI18n } from '@vaadin/vaadin-login';
-import { AfterEnterObserver, Router, RouterLocation } from '@vaadin/router';
+import { AfterEnterObserver, RouterLocation } from '@vaadin/router';
 import type { LoginResult } from '@vaadin/flow-frontend';
 import { login } from '../../auth';
 import { Lumo } from '../../utils/lumo';
